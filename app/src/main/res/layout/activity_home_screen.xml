@@ -28,9 +28,16 @@
         android:layout_height="wrap_content"
         android:text="email"
         android:layout_centerVertical="true"
-        android:textSize="32dp"
+        android:textSize="20dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/email"
         android:layout_below="@id/name" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Out"
+        android:id="@+id/signOut"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
