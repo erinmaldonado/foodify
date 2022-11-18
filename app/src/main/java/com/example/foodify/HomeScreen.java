@@ -56,8 +56,8 @@ public class HomeScreen extends AppCompatActivity {
         gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete( Task<Void> task) {
-            finish();
-            startActivity(new Intent(HomeScreen.this,MainActivity.class));
+                finish();
+                startActivity(new Intent(HomeScreen.this,MainActivity.class));
             }
         });
     }
