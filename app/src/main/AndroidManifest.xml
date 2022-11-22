@@ -6,7 +6,6 @@
 
     <application
         android:allowBackup="true"
-        android:name=".App"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -16,40 +15,29 @@
         android:theme="@style/Theme.Foodify"
         tools:targetApi="31" >
 
-        <activity
-            android:name=".HomeScreen"
-            android:exported="false" >
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true" >
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
         </activity>
+
+        <activity
+            android:name=".HomeScreen"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".GoogleSignInActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ProfileActivity"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".Register"
-            android:label="@string/register" >
-        </activity>
+            android:parentActivityName=".MainActivity" />
 
-        <meta-data
-            android:name="com.parse.SERVER_URL"
-            android:value="@string/back4app_server_url" />
-        <meta-data
-            android:name="com.parse.APPLICATION_ID"
-            android:value="@string/back4app_app_id" />
-        <meta-data
-            android:name="com.parse.CLIENT_KEY"
-            android:value="@string/back4app_client_key" />
+
     </application>
 
 </manifest>

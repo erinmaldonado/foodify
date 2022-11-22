@@ -19,8 +19,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     ImageView btSignInGoogle;
@@ -65,19 +63,16 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(view -> {
             login();
         });
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://foodify-3513e-default-rtdb.firebaseio.com/");
-        DatabaseReference myRef = database.getReference("message");
-
-        myRef.setValue("Hello, World!");
     }
 
+    // google login
     private void loginGoogle(){
         Intent intent = new Intent(MainActivity.this, GoogleSignInActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
+    // regular login
     private void login() {
         String emailStr = email.getText().toString();
         String passwordStr = password.getText().toString();
@@ -108,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // sends user to profile
     private void sendUserToNextActivity() {
         Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -20,12 +20,6 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
 
-    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
-
-    <!-- Paste BOTH strings as required -->
-    <string name="back4app_app_id">CNHxFS5c8l3po2VYLW8AtmZIv4jFq262Ei70jTn8</string>
-    <string name="back4app_client_key">wQVmUyBVMO1UtzO5iYMHFvnRfqE1cMO73YscPBy8</string>
-
 
     <string name="food_1">Apple</string>
     <string name="food_2">Tomato</string>
@@ -34,5 +28,7 @@
     <string name="food_5">White Bread</string>
     <string name="food_6">Lettuce</string>
     <string name="food_7">Mayo</string>
+
+    <string name="web_client_id">786669483104-orpi6t3siqide3ok3nmspj3i4au62v25.apps.googleusercontent.com</string>
 
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,115 +7,72 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/username"
-        android:layout_width="match_parent"
+        android:id="@+id/email"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="32dp"
         android:drawableLeft="@drawable/ic_baseline_person_24"
         android:drawablePadding="20dp"
         android:hint="Email"
         android:padding="20dp"
         android:textColor="@color/black"
-        android:textColorHint="@color/black" />
+        android:textColorHint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/password"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/username"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="24dp"
         android:drawableLeft="@drawable/lock"
         android:drawablePadding="20dp"
         android:hint="Password"
         android:inputType="textPassword"
         android:padding="20dp"
         android:textColor="@color/black"
-        android:textColorHint="@color/black" />
+        android:textColorHint="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/email"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/email"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
 
 
     <TextView
         android:id="@+id/forgetPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/loginBtn"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="4dp"
         android:text="Forgot Password"
-        android:textColor="@color/black" />
-
-    <TextView
-        android:id="@+id/otherLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/socialIcons"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="2dp"
-        android:text="or sign in with"
-        android:textColor="@color/black" />
-
-    <LinearLayout
-        android:id="@+id/socialIcons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center">
-
-        <ImageView
-            android:id="@+id/google_btn"
-            android:layout_margin="20dp"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/google_icon"/>
-
-        <ImageView
-            android:layout_margin="20dp"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/facebook_icon"/>
-
-    </LinearLayout>
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.96"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
 
     <Button
         android:id="@+id/loginBtn"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/password"
-        android:layout_alignStart="@+id/password"
-        android:layout_alignEnd="@+id/password"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="32dp"
         android:backgroundTint="@color/black"
         android:paddingLeft="15dp"
         android:paddingTop="20dp"
         android:paddingRight="15dp"
         android:paddingBottom="20dp"
         android:text="Log In"
-        app:cornerRadius="40dp" />
+        app:cornerRadius="40dp"
+        app:layout_constraintEnd_toEndOf="@+id/password"
+        app:layout_constraintStart_toStartOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
 
     <Button
         android:id="@+id/register_btn"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/password"
-        android:layout_alignStart="@+id/password"
-        android:layout_alignEnd="@+id/password"
-        android:layout_alignParentStart="true"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="160dp"
-        android:layout_marginEnd="9dp"
+        android:layout_marginTop="24dp"
         android:paddingLeft="15dp"
         android:paddingTop="20dp"
         android:paddingRight="15dp"
@@ -124,6 +81,9 @@
         android:textColor="#000000"
         app:backgroundTint="#FFFFFF"
         app:cornerRadius="40dp"
+        app:layout_constraintEnd_toEndOf="@+id/loginBtn"
+        app:layout_constraintStart_toStartOf="@+id/loginBtn"
+        app:layout_constraintTop_toBottomOf="@+id/loginBtn"
         app:strokeColor="#000000"
         app:strokeWidth="1dp" />
 
@@ -131,20 +91,36 @@
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="49dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_foreground" />
 
     <TextView
         android:id="@+id/company_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="156dp"
+        android:layout_marginTop="85dp"
         android:text="Foodify"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+    <ImageView
+        android:id="@+id/google_btn"
+        android:layout_width="58dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_btn"
+        app:layout_constraintVertical_bias="0.244"
+        app:srcCompat="@drawable/google_icon" />
 
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

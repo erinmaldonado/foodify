@@ -68,6 +68,7 @@ public class GoogleSignInActivity extends Activity {
     }
 
     // [START onactivityresult]
+    // ERROR HERE
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -82,7 +83,7 @@ public class GoogleSignInActivity extends Activity {
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 progressDialog.dismiss();
-                Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "onactivity "+e.getMessage(), Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -102,7 +103,7 @@ public class GoogleSignInActivity extends Activity {
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(GoogleSignInActivity.this, ""+task.getException(), Toast.LENGTH_SHORT);
+                            Toast.makeText(GoogleSignInActivity.this, "firebase "+task.getException(), Toast.LENGTH_SHORT);
                             finish();
                         }
                     }
@@ -116,3 +117,4 @@ public class GoogleSignInActivity extends Activity {
         startActivity(intent);
     }
 }
+

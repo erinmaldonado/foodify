@@ -6,32 +6,38 @@
     android:layout_height="match_parent"
     tools:context=".HomeScreen">
 
-    <FrameLayout
-        android:id="@+id/fl_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_nav"/>
+    <TextView
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_nav"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        app:menu="@menu/nav_menu"
-        app:itemIconTint="@color/black"
-        app:itemTextColor="@color/black"
-        app:itemRippleColor="@color/white"
+        android:text="Welcome"
+        android:layout_centerHorizontal="true"
+        android:textSize="32dp"/>
 
-        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:layout_centerVertical="true"
+        android:textSize="32dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/name"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="email"
+        android:layout_centerVertical="true"
+        android:textSize="20dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/email"
+        android:layout_below="@id/name" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign Out"
         android:id="@+id/signOut"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

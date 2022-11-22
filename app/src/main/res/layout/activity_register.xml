@@ -11,31 +11,8 @@
     tools:context=".Register">
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/inputName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="500dp"
-        android:background="@drawable/input_bg"
-        android:ems="10"
-        android:hint="Username"
-        android:inputType="textPersonName"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/company_name"
-        app:layout_constraintVertical_bias="0.571" />
-
-    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/inputPassword"
-        android:layout_width="318dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/input_bg"
@@ -56,12 +33,13 @@
         android:id="@+id/alreadyHaveAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="172dp"
-        android:onClick="haveAccount"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="212dp"
         android:text="Already have an account?"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/inputConfirmPassword"
@@ -84,7 +62,6 @@
         android:id="@+id/inputEmail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:background="@drawable/input_bg"
         android:ems="10"
         android:hint="Email"
@@ -93,9 +70,9 @@
         android:paddingTop="10dp"
         android:paddingRight="20dp"
         android:paddingBottom="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/inputName"
-        app:layout_constraintStart_toStartOf="@+id/inputName"
-        app:layout_constraintTop_toBottomOf="@+id/inputName" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/company_name" />
 
     <Button
         android:id="@+id/register"
@@ -104,7 +81,6 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="174dp"
         android:backgroundTint="#000000"
-        android:onClick="registerAccount"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
         android:text="@string/register"
