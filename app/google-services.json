@@ -1,34 +1,41 @@
 {
   "project_info": {
-    "project_number": "786669483104",
-    "firebase_url": "https://foodify-3513e-default-rtdb.firebaseio.com",
-    "project_id": "foodify-3513e",
-    "storage_bucket": "foodify-3513e.appspot.com"
+    "project_number": "211203390587",
+    "project_id": "foodify-1668542128718",
+    "storage_bucket": "foodify-1668542128718.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:786669483104:android:b3f32297e627403ffdff05",
+        "mobilesdk_app_id": "1:211203390587:android:fbc65d7a4d9cc13a0736de",
         "android_client_info": {
           "package_name": "com.example.foodify"
         }
       },
       "oauth_client": [
         {
-          "client_id": "786669483104-orpi6t3siqide3ok3nmspj3i4au62v25.apps.googleusercontent.com",
+          "client_id": "211203390587-vtio6n1lsk11f2c788rm4tkcuo2tllov.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.foodify",
+            "certificate_hash": "9b0a757bc4e75bc648b547c0c7c0bd38957ef816"
+          }
+        },
+        {
+          "client_id": "211203390587-oprn8kee9depd7r1f0t6g0m46j8q1c4m.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB6YmG8TgBDHj0OxZZi3jLmsUmQjRYvHOc"
+          "current_key": "AIzaSyAhrUp-ckKV87SYV-quZpx7On3DvjNi-bI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "786669483104-orpi6t3siqide3ok3nmspj3i4au62v25.apps.googleusercontent.com",
+              "client_id": "211203390587-oprn8kee9depd7r1f0t6g0m46j8q1c4m.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
