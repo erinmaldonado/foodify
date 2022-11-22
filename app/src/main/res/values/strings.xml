@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Foodify</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="food_1">Apple</string>
+    <string name="food_2">Tomato</string>
+    <string name="food_3">Carrot</string>
+    <string name="food_4">Bacon</string>
+    <string name="food_5">White Bread</string>
+    <string name="food_6">Lettuce</string>
+    <string name="food_7">Mayo</string>
 </resources>

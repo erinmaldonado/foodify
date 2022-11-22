@@ -3,6 +3,8 @@ package com.example.foodify;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,10 +39,10 @@ public class HomeScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
-
         bottomNavigationView = findViewById(R.id.bottom_nav);
-
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_wrapper,homeFragment).commit();
+        //when a user taps on the navigation bar it changes the view to the respective tab
+        replaceFragment(new HomeFragment());
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -77,6 +79,14 @@ public class HomeScreen extends AppCompatActivity {
             }
         });
     }
+
+    private void replaceFragment(HomeFragment homeFragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fl_wrapper,homeFragment);
+        fragmentTransaction.commit();
+    }
+
     //on click of sign out sends you back to home page
     void signOut(){
         gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
