@@ -26,4 +26,13 @@
     <string name="back4app_app_id">CNHxFS5c8l3po2VYLW8AtmZIv4jFq262Ei70jTn8</string>
     <string name="back4app_client_key">wQVmUyBVMO1UtzO5iYMHFvnRfqE1cMO73YscPBy8</string>
 
+
+    <string name="food_1">Apple</string>
+    <string name="food_2">Tomato</string>
+    <string name="food_3">Carrot</string>
+    <string name="food_4">Bacon</string>
+    <string name="food_5">White Bread</string>
+    <string name="food_6">Lettuce</string>
+    <string name="food_7">Mayo</string>
+
 </resources>

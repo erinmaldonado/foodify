@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.HomeFragment">
+
+    <RelativeLayout
+        android:id="@+id/displayFood"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/homeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HOME"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="45dp"
+            android:layout_marginStart="15dp"/>
+
+        <EditText
+            android:id="@+id/foodSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/homeTitle"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawableStart="@drawable/ic_baseline_search_24"
+            android:drawablePadding="5dp"
+            android:hint="Search Inventory"
+            android:minHeight="48dp"
+            android:textColorHint="#B1ADAD" />
+        <TextView
+            android:id="@+id/ingredientsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/foodSearch"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:text="INGREDIENTS"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/inventoryRecView"
+            android:layout_width="wrap_content"
+            android:layout_height="165dp"
+            android:layout_below="@+id/ingredientsTitle"
+            android:layout_marginTop="2dp"
+            android:padding="10dp"
+            tools:listitem="@layout/inventory_list_item" />
+
+        <TextView
+            android:id="@+id/scanTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/inventoryRecView"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:text="Scan"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/scanDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/scanTitle"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="1dp"
+            android:text="Scan barcode to add items to your inventory"
+            android:textColor="@color/black"
+            android:textSize="13sp"
+            />
+
+        <Button
+            android:id="@+id/scanBtn"
+            android:layout_width="95dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/inventoryRecView"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="15dp"
+            android:backgroundTint="#e6b400"
+            android:text="Scan"
+            android:textSize="10sp"
+            tools:ignore="SmallSp,TouchTargetSizeCheck" />
+
+        <Button
+            android:id="@+id/viewMoreBtn"
+            android:layout_marginEnd="15dp"
+            android:layout_width="95dp"
+            android:layout_height="35dp"
+            android:layout_alignParentEnd="true"
+            android:textSize="10sp"
+            android:backgroundTint="#e6b400"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/foodSearch"
+            android:text="View More"
+            tools:ignore="SmallSp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/scanDetails"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/barcode_img"
+            android:layout_centerHorizontal="true"
+            />
+
+
+    </RelativeLayout>
+
+</FrameLayout>
