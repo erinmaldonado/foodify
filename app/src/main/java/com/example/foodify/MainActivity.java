@@ -1,130 +1,116 @@
 package com.example.foodify;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.text.TextUtils;
+import android.util.Patterns;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.parse.ParseUser;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-public class MainActivity extends AppCompatActivity{
-    GoogleSignInOptions gso;
-    GoogleSignInClient gsc;
-    ImageView googleBtn;
+public class MainActivity extends AppCompatActivity {
+    ImageView btSignInGoogle;
+    Button btnRegister;
+    Button btnLogin;
 
-    private TextInputEditText username;
-    private TextInputEditText password;
-    private Button login;
-    private Button navigatesignup;
-    private ProgressDialog progressDialog;
+    FirebaseAuth mAuth;
+    FirebaseUser mUser;
+    TextInputEditText email;
+    TextInputEditText password;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        googleBtn = findViewById(R.id.google_btn);
+        btSignInGoogle = (ImageView) findViewById(R.id.google_btn);
+        btnRegister = (Button) findViewById(R.id.register_btn);
 
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        gsc = GoogleSignIn.getClient(this,gso);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        btnLogin = (Button) findViewById(R.id.loginBtn);
 
-        googleBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                signIn();
-            }
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
+
+
+
+        progressDialog = new ProgressDialog(this);
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
+
+        btSignInGoogle.setOnClickListener(view -> {
+            loginGoogle();
         });
 
-        progressDialog = new ProgressDialog(MainActivity.this);
-
-        username = findViewById(R.id.username);
-        password = findViewById(R.id.password);
-        login = findViewById(R.id.loginBtn);
-        navigatesignup = findViewById(R.id.register_btn);
-
-        login.setOnClickListener(v -> login(username.getText().toString(), password.getText().toString()));
-
-        navigatesignup.setOnClickListener(v -> {
+        btnRegister.setOnClickListener(view ->{
             startActivity(new Intent(MainActivity.this, Register.class));
         });
 
+        btnLogin.setOnClickListener(view -> {
+            login();
+        });
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://foodify-3513e-default-rtdb.firebaseio.com/");
+        DatabaseReference myRef = database.getReference("message");
+
+        myRef.setValue("Hello, World!");
     }
 
-    private void signIn() {
-        Intent signInIntent = gsc.getSignInIntent();
-        startActivity(signInIntent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1000){
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
-            try {
-                task.getResult(ApiException.class);
-                navigateToHomeScreen();
-            } catch (ApiException e) {
-                Toast.makeText(getApplicationContext(),"Something went wrong",Toast.LENGTH_LONG).show();
-            }
-        }
-
-    }
-
-    void navigateToHomeScreen() {
-        finish();
-        Intent intent = new Intent(MainActivity.this,HomeScreen.class);
+    private void loginGoogle(){
+        Intent intent = new Intent(MainActivity.this, GoogleSignInActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
-    private void login(String username, String password) {
-        progressDialog.show();
-        ParseUser.logInInBackground(username, password, (parseUser, e) -> {
-            progressDialog.dismiss();
-            if (parseUser != null) {
-                showAlert("Successful Login", "Welcome back " + username + " !");
-                Intent intent = new Intent(MainActivity.this, HomeScreen.class);
-                startActivity(intent);
-            } else {
-                ParseUser.logOut();
-                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+    private void login() {
+        String emailStr = email.getText().toString();
+        String passwordStr = password.getText().toString();
+
+        if (!TextUtils.isEmpty(emailStr) && !Patterns.EMAIL_ADDRESS.matcher(emailStr).matches()) {
+            email.setError("Enter Correct email");
+        } else if (passwordStr.isEmpty() || password.length() < 6) {
+            password.setError("Incorrect Password");
+        } else {
+            progressDialog.setMessage("Logging in...");
+            progressDialog.setTitle("Login");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
+
+            mAuth.signInWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()){
+                        progressDialog.dismiss();
+                        sendUserToNextActivity();
+                        Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT);
+                    } else {
+                        progressDialog.dismiss();
+                        Toast.makeText(MainActivity.this, ""+task.getException(), Toast.LENGTH_SHORT);
+                    }
+                }
+            });
+        }
     }
 
-    private void showAlert(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        // don't forget to change the line below with the names of your Activities
-                        Intent intent = new Intent(MainActivity.this, LogoutActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
-                });
-        AlertDialog ok = builder.create();
-        ok.show();
+    private void sendUserToNextActivity() {
+        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
-
-
-
