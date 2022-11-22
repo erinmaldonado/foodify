@@ -112,7 +112,7 @@ public class GoogleSignInActivity extends Activity {
     // [END auth_with_google]
 
     private void updateUI(FirebaseUser user) {
-        Intent intent = new Intent(GoogleSignInActivity.this, ProfileActivity.class);
+        Intent intent = new Intent(GoogleSignInActivity.this, HomeScreen.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
