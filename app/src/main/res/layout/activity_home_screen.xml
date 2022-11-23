@@ -40,4 +40,14 @@
         android:id="@+id/signOut"
         android:layout_alignParentBottom="true"/>
 
+    <Button
+        android:id="@+id/scan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="212dp"
+        android:layout_toEndOf="@+id/signOut"
+        android:text="scan" />
+
 </RelativeLayout>
