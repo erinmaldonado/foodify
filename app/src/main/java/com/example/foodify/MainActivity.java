@@ -14,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,12 +25,15 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 public class MainActivity extends AppCompatActivity {
     ImageView btSignInGoogle;
     Button btnRegister;
     Button btnLogin;
 
+    Button btnTestScan;
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     TextInputEditText email;
@@ -44,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         btSignInGoogle = (ImageView) findViewById(R.id.google_btn);
         btnRegister = (Button) findViewById(R.id.register_btn);
+        btnTestScan = (Button) findViewById(R.id.testScan);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         btnLogin = (Button) findViewById(R.id.loginBtn);
@@ -71,7 +77,34 @@ public class MainActivity extends AppCompatActivity {
         forgotPassword.setOnClickListener(view ->{
             sendPasswordReset();
         });
+
+        btnTestScan.setOnClickListener(view ->{
+            scan();
+        });
     }
+
+    void scan(){
+        ScanOptions options = new ScanOptions();
+        options.setPrompt("Scan a barcode");
+        options.setCameraId(0);
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(true);
+        options.setCaptureActivity(BarcodeScannerActivity.class);
+        barLauncher.launch(options);
+    }
+
+    ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
+        if(result.getContents() != null){
+            Toast.makeText(MainActivity.this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Result");
+            builder.setMessage(result.getContents());
+            builder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss()).show();
+        } else{
+            Toast.makeText(MainActivity.this, "Cancelled", Toast.LENGTH_LONG).show();
+        }
+    });
+
 
     private void sendPasswordReset(){
         Intent intent = new Intent(MainActivity.this, ForgotPassword.class);

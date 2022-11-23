@@ -72,15 +72,13 @@ public class HomeScreen extends AppCompatActivity {
 
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
        if(result.getContents() != null){
+           Toast.makeText(HomeScreen.this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
            AlertDialog.Builder builder = new AlertDialog.Builder(HomeScreen.this);
            builder.setTitle("Result");
            builder.setMessage(result.getContents());
-           builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-               @Override
-               public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-               }
-           }).show();
+           builder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss()).show();
+       } else{
+           Toast.makeText(HomeScreen.this, "Cancelled", Toast.LENGTH_LONG).show();
        }
     });
 
