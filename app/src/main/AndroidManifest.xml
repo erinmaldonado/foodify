@@ -36,7 +36,9 @@
         <activity
             android:name=".Register"
             android:parentActivityName=".MainActivity" />
-
+        <activity
+            android:name=".ForgotPassword"
+            android:parentActivityName=".MainActivity" />
 
     </application>
 

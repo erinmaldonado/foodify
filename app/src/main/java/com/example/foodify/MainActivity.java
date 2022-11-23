@@ -1,13 +1,17 @@
 package com.example.foodify;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     TextInputEditText password;
     ProgressDialog progressDialog;
 
+    TextView forgotPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,11 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         btnLogin = (Button) findViewById(R.id.loginBtn);
-
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
-
-
+        forgotPassword = (TextView) findViewById(R.id.forgetPass);
 
         progressDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
@@ -63,6 +67,16 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(view -> {
             login();
         });
+
+        forgotPassword.setOnClickListener(view ->{
+            sendPasswordReset();
+        });
+    }
+
+    private void sendPasswordReset(){
+        Intent intent = new Intent(MainActivity.this, ForgotPassword.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     // google login
@@ -87,17 +101,14 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
 
-            mAuth.signInWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful()){
-                        progressDialog.dismiss();
-                        sendUserToNextActivity();
-                        Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT);
-                    } else {
-                        progressDialog.dismiss();
-                        Toast.makeText(MainActivity.this, ""+task.getException(), Toast.LENGTH_SHORT);
-                    }
+            mAuth.signInWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(task -> {
+                if(task.isSuccessful()){
+                    progressDialog.dismiss();
+                    sendUserToNextActivity();
+                    Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT);
+                } else {
+                    progressDialog.dismiss();
+                    Toast.makeText(MainActivity.this, ""+task.getException(), Toast.LENGTH_SHORT);
                 }
             });
         }
