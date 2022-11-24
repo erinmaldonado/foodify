@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -24,6 +25,8 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.io.IOException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -31,44 +34,18 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class HomeScreen extends AppCompatActivity {
-
-    GoogleSignInOptions gso;
-    GoogleSignInClient gsc;
-    TextView name,email;
-    Button signOutBtn;
     Button scanBtn;
 
-
-    // Signs in user via google login
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
-        name = findViewById(R.id.name);
-        email = findViewById(R.id.email);
-        signOutBtn = findViewById(R.id.signOut);
         scanBtn = findViewById(R.id.scan);
 
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        gsc = GoogleSignIn.getClient(this,gso);
-
-
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-        if(acct!=null){
-            String personName = acct.getDisplayName();
-            String personEmail = acct.getEmail();
-            name.setText(personName);
-            email.setText(personEmail);
-        }
-
-        signOutBtn.setOnClickListener(view -> signOut());
-        scanBtn.setOnClickListener(view-> scan());
-
-
-    }
-    void signOut(){
-        gsc.signOut().addOnCompleteListener(task -> startActivity(new Intent(HomeScreen.this,MainActivity.class)));
+        scanBtn.setOnClickListener(view-> {
+            scan();
+        });
     }
 
     void scan(){
@@ -82,17 +59,44 @@ public class HomeScreen extends AppCompatActivity {
     }
 
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
-       if(result.getContents() != null){
-           Toast.makeText(HomeScreen.this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-           AlertDialog.Builder builder = new AlertDialog.Builder(HomeScreen.this);
-           builder.setTitle("Result");
-           builder.setMessage(result.getContents());
-           builder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss()).show();
-       } else{
-           Toast.makeText(HomeScreen.this, "Cancelled", Toast.LENGTH_LONG).show();
-       }
+        if(result.getContents() != null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(HomeScreen.this);
+            builder.setTitle("Result");
+            builder.setMessage(result.getContents());
+            builder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss()).show();
+            String upc = result.getContents();
+            sendUserToBarCodeInfo(upc);
+        }
     });
 
+    private void sendUserToBarCodeInfo(String upc){
+        TextView textViewResult = findViewById(R.id.text_view_result);
+
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/products/upc/"+upc;
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("X-RapidAPI-Key", "7b0220d6ebmshc069b9ec4a6e87bp1dff99jsnddb59891d88d")
+                .addHeader("X-RapidAPI-Host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com")
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if(response.isSuccessful()){
+                    String myResponse = response.body().string();
+                    HomeScreen.this.runOnUiThread(() -> textViewResult.setText(myResponse));
+                }
+            }
+        });
+    }
 
 
 }

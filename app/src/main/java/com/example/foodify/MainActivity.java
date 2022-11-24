@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     Button btnRegister;
     Button btnLogin;
 
-    Button btnTestScan;
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     TextInputEditText email;
@@ -56,12 +55,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btSignInGoogle = findViewById(R.id.google_btn);
-        btnRegister = findViewById(R.id.register_btn);
-        btnTestScan = findViewById(R.id.testScan);
+        btSignInGoogle = (ImageView) findViewById(R.id.google_btn);
+        btnRegister = (Button) findViewById(R.id.register_btn);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        btnLogin = findViewById(R.id.loginBtn);
+        btnLogin = (Button) findViewById(R.id.loginBtn);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         forgotPassword = (TextView) findViewById(R.id.forgetPass);
@@ -87,39 +85,7 @@ public class MainActivity extends AppCompatActivity {
             sendPasswordReset();
         });
 
-        btnTestScan.setOnClickListener(view ->{
-            scan();
-            sendUserToBarCodeInfo();
-        });
     }
-
-    private void sendUserToBarCodeInfo(){
-        Intent intent = new Intent(MainActivity.this, JsonResult.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-    void scan(){
-        ScanOptions options = new ScanOptions();
-        options.setPrompt("Scan a barcode");
-        options.setCameraId(0);
-        options.setBeepEnabled(true);
-        options.setOrientationLocked(true);
-        options.setCaptureActivity(BarcodeScannerActivity.class);
-        barLauncher.launch(options);
-    }
-
-    ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
-        if(result.getContents() != null){
-            Toast.makeText(MainActivity.this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("Result");
-            builder.setMessage(result.getContents());
-            builder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss()).show();
-        } else{
-            Toast.makeText(MainActivity.this, "Cancelled", Toast.LENGTH_LONG).show();
-        }
-    });
-
 
     private void sendPasswordReset(){
         Intent intent = new Intent(MainActivity.this, ForgotPassword.class);

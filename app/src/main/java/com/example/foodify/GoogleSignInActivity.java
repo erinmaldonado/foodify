@@ -45,9 +45,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
  */
 public class GoogleSignInActivity extends Activity {
     private static final int RC_SIGN_IN = 101;
-    GoogleSignInClient mGoogleSignInClient;
-    FirebaseAuth mAuth;
-    FirebaseUser mUser;
+    private GoogleSignInClient mGoogleSignInClient;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
     ProgressDialog progressDialog;
 
     @Override
@@ -67,11 +67,11 @@ public class GoogleSignInActivity extends Activity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        signInIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     // [START onactivityresult]
-    // ERROR HERE
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

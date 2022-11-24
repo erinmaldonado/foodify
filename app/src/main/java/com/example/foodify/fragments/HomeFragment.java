@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.foodify.FoodDisplayAdapter;
 import com.example.foodify.Inventory;
 import com.example.foodify.R;
 
-import java.sql.Array;
 import java.util.ArrayList;
 
 /**
@@ -38,6 +38,8 @@ public class HomeFragment extends Fragment {
     private String[] foodName;
     private int[] imageResource;
     private RecyclerView recyclerview;
+
+    private Button scanBtn;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -89,6 +91,7 @@ public class HomeFragment extends Fragment {
         FoodDisplayAdapter adapter = new FoodDisplayAdapter(getContext(),inventoryArrayList);
         recyclerview.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+
     }
 
     private void dataInitialize() {
