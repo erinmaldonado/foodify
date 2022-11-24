@@ -22,6 +22,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import java.io.IOException;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class HomeScreen extends AppCompatActivity {
 
     GoogleSignInOptions gso;
@@ -29,6 +37,7 @@ public class HomeScreen extends AppCompatActivity {
     TextView name,email;
     Button signOutBtn;
     Button scanBtn;
+
 
     // Signs in user via google login
     @Override
@@ -55,6 +64,8 @@ public class HomeScreen extends AppCompatActivity {
 
         signOutBtn.setOnClickListener(view -> signOut());
         scanBtn.setOnClickListener(view-> scan());
+
+
     }
     void signOut(){
         gsc.signOut().addOnCompleteListener(task -> startActivity(new Intent(HomeScreen.this,MainActivity.class)));
@@ -81,6 +92,7 @@ public class HomeScreen extends AppCompatActivity {
            Toast.makeText(HomeScreen.this, "Cancelled", Toast.LENGTH_LONG).show();
        }
     });
+
 
 
 }

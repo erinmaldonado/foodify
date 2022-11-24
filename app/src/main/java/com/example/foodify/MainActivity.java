@@ -28,6 +28,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import java.io.IOException;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class MainActivity extends AppCompatActivity {
     ImageView btSignInGoogle;
     Button btnRegister;
@@ -42,17 +50,18 @@ public class MainActivity extends AppCompatActivity {
 
     TextView forgotPassword;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btSignInGoogle = (ImageView) findViewById(R.id.google_btn);
-        btnRegister = (Button) findViewById(R.id.register_btn);
-        btnTestScan = (Button) findViewById(R.id.testScan);
+        btSignInGoogle = findViewById(R.id.google_btn);
+        btnRegister = findViewById(R.id.register_btn);
+        btnTestScan = findViewById(R.id.testScan);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        btnLogin = (Button) findViewById(R.id.loginBtn);
+        btnLogin = findViewById(R.id.loginBtn);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         forgotPassword = (TextView) findViewById(R.id.forgetPass);
@@ -80,9 +89,15 @@ public class MainActivity extends AppCompatActivity {
 
         btnTestScan.setOnClickListener(view ->{
             scan();
+            sendUserToBarCodeInfo();
         });
     }
 
+    private void sendUserToBarCodeInfo(){
+        Intent intent = new Intent(MainActivity.this, JsonResult.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
     void scan(){
         ScanOptions options = new ScanOptions();
         options.setPrompt("Scan a barcode");

@@ -1,5 +1,7 @@
 package com.example.foodify;
 
+import android.content.Intent;
+
 import com.journeyapps.barcodescanner.CaptureActivity;
 
 import java.io.IOException;

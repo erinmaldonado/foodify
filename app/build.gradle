@@ -73,8 +73,13 @@ dependencies {
     implementation 'com.google.mlkit:barcode-scanning:17.0.2'
 
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.0'
     implementation "androidx.multidex:multidex:2.0.1"
 
-    implementation 'com.squareup.okhttp3:okhttp:3.14.6'
+    // define a BOM and its version
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
+
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp:3.12.10")
+    implementation("com.squareup.okhttp3:logging-interceptor")
 }
