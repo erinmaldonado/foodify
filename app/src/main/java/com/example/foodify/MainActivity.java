@@ -16,15 +16,23 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
@@ -41,11 +49,14 @@ public class MainActivity extends AppCompatActivity {
     Button btnRegister;
     Button btnLogin;
 
-    FirebaseAuth mAuth;
-    FirebaseUser mUser;
     TextInputEditText email;
     TextInputEditText password;
     ProgressDialog progressDialog;
+
+    GoogleSignInClient googleSignInClient;
+
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
 
     TextView forgotPassword;
 
@@ -54,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
+        if(mUser != null){
+            loginGoogle();
+        }
 
         btSignInGoogle = (ImageView) findViewById(R.id.google_btn);
         btnRegister = (Button) findViewById(R.id.register_btn);
@@ -65,9 +82,17 @@ public class MainActivity extends AppCompatActivity {
         forgotPassword = (TextView) findViewById(R.id.forgetPass);
 
         progressDialog = new ProgressDialog(this);
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
 
+        GoogleSignInOptions googleSignInOptions=new GoogleSignInOptions.Builder(
+                GoogleSignInOptions.DEFAULT_SIGN_IN
+        ).requestIdToken(String.valueOf(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+
+        // Initialize sign in client
+        googleSignInClient= GoogleSignIn.getClient(MainActivity.this
+                ,googleSignInOptions);
 
         btSignInGoogle.setOnClickListener(view -> {
             loginGoogle();
@@ -119,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     progressDialog.dismiss();
                     sendUserToNextActivity();
-                    Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT);
                 } else {
                     progressDialog.dismiss();
                     Toast.makeText(MainActivity.this, ""+task.getException(), Toast.LENGTH_SHORT);

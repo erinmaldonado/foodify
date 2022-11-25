@@ -16,10 +16,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
@@ -36,18 +40,32 @@ import okhttp3.Response;
 public class HomeScreen extends AppCompatActivity {
     Button scanBtn;
 
+    Button signOutBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
-
         scanBtn = findViewById(R.id.scan);
-
         scanBtn.setOnClickListener(view-> {
             scan();
         });
+
+        signOutBtn = findViewById(R.id.signOut);
+        signOutBtn.setOnClickListener(view ->{
+            signOut();
+        });
     }
 
+    void signOut(){
+        AuthUI.getInstance()
+                .signOut(HomeScreen.this)
+                .addOnCompleteListener(task -> {
+                    // do something here
+                    Intent intent = new Intent(HomeScreen.this, MainActivity.class);
+                    startActivity(intent);
+                });
+    }
     void scan(){
         ScanOptions options = new ScanOptions();
         options.setPrompt("Scan a barcode");
@@ -60,10 +78,6 @@ public class HomeScreen extends AppCompatActivity {
 
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
         if(result.getContents() != null){
-            AlertDialog.Builder builder = new AlertDialog.Builder(HomeScreen.this);
-            builder.setTitle("Result");
-            builder.setMessage(result.getContents());
-            builder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss()).show();
             String upc = result.getContents();
             sendUserToBarCodeInfo(upc);
         }
@@ -77,7 +91,7 @@ public class HomeScreen extends AppCompatActivity {
         Request request = new Request.Builder()
                 .url(url)
                 .get()
-                .addHeader("X-RapidAPI-Key", "7b0220d6ebmshc069b9ec4a6e87bp1dff99jsnddb59891d88d")
+                .addHeader("X-RapidAPI-Key", "3ae90ae344mshf1e661c04b53edap122c6ejsnaf4f83978168")
                 .addHeader("X-RapidAPI-Host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com")
                 .build();
 
@@ -97,6 +111,5 @@ public class HomeScreen extends AppCompatActivity {
             }
         });
     }
-
 
 }
