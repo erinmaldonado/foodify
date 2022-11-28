@@ -2,11 +2,13 @@ package com.example.foodify;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,11 +26,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -40,8 +50,12 @@ import okhttp3.Response;
 
 public class HomeScreen extends AppCompatActivity {
     Button scanBtn;
-
     Button signOutBtn;
+    Button add;
+    Button subtract;
+
+    int minteger = 0;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +70,16 @@ public class HomeScreen extends AppCompatActivity {
         signOutBtn.setOnClickListener(view ->{
             signOut();
         });
+
+        add = findViewById(R.id.add);
+        add.setOnClickListener(view ->{
+            increaseInteger();
+        });
+
+        subtract = findViewById(R.id.subtract);
+        subtract.setOnClickListener(view ->{
+            decreaseInteger();
+        });
     }
 
     void signOut(){
@@ -67,6 +91,7 @@ public class HomeScreen extends AppCompatActivity {
                     startActivity(intent);
                 });
     }
+
     void scan(){
         ScanOptions options = new ScanOptions();
         options.setPrompt("Scan a barcode");
@@ -81,8 +106,20 @@ public class HomeScreen extends AppCompatActivity {
         if(result.getContents() != null){
             String upc = result.getContents();
             sendUserToBarCodeInfo(upc);
+            saveUPCToDatabase(upc, minteger);
         }
     });
+
+    private void saveUPCToDatabase(String upc, int total){
+        // Access a Cloud Firestore instance from your Activity
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        Map<String, Object> foodUPC = new HashMap<>();
+        foodUPC.put("UPC", upc);
+        foodUPC.put("total", total);
+        db.collection("foodInfo").document().set(foodUPC, SetOptions.merge());
+    }
 
     private void sendUserToBarCodeInfo(String upc){
         TextView textViewResult = findViewById(R.id.text_view_result);
@@ -110,9 +147,26 @@ public class HomeScreen extends AppCompatActivity {
                     String myResponse = response.body().string();
                     Gson gson = new Gson();
                     JsonResponse responseResult=gson.fromJson(myResponse, JsonResponse.class);
-                    HomeScreen.this.runOnUiThread(() -> textViewResult.setText(responseResult.getTitle() + " id: " + responseResult.getId()));
+                    HomeScreen.this.runOnUiThread(() ->{
+                        textViewResult.setText(responseResult.getTitle() + " id: " + responseResult.getId());
+                    });
                 }
             }
         });
+    }
+
+    public void increaseInteger() {
+        minteger = minteger + 1;
+        display(minteger);
+
+    }public void decreaseInteger() {
+        minteger = minteger - 1;
+        display(minteger);
+    }
+
+    private void display(int number) {
+        TextView displayInteger = (TextView) findViewById(
+                R.id.total);
+        displayInteger.setText("" + number);
     }
 }
