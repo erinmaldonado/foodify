@@ -1,5 +1,26 @@
 <resources>
     <string name="app_name">Foodify</string>
+    <string name="register">Register</string>
+    <string name="title_activity_home_screen2">HomeScreen2</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+
     <string name="food_1">Apple</string>
     <string name="food_2">Tomato</string>
     <string name="food_3">Carrot</string>
@@ -7,4 +28,7 @@
     <string name="food_5">White Bread</string>
     <string name="food_6">Lettuce</string>
     <string name="food_7">Mayo</string>
+
+    <string name="web_client_id">786669483104-orpi6t3siqide3ok3nmspj3i4au62v25.apps.googleusercontent.com</string>
+
 </resources>

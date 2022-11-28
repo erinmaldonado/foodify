@@ -1,85 +1,112 @@
 package com.example.foodify;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.media.ImageWriter;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
-import android.util.Log;
-import android.view.View;
+import android.text.TextUtils;
+import android.util.Patterns;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInApi;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
+    ImageView btSignInGoogle;
+    Button btnRegister;
+    Button btnLogin;
 
-    GoogleSignInOptions gso;
-    GoogleSignInClient gsc;
-    ImageView googleBtn;
-
+    FirebaseAuth mAuth;
+    FirebaseUser mUser;
+    TextInputEditText email;
+    TextInputEditText password;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        googleBtn = findViewById(R.id.google_btn);
+        btSignInGoogle = (ImageView) findViewById(R.id.google_btn);
+        btnRegister = (Button) findViewById(R.id.register_btn);
 
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        gsc = GoogleSignIn.getClient(this,gso);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        btnLogin = (Button) findViewById(R.id.loginBtn);
 
-
-
-        googleBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                signIn();
-            }
-    });
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
 
 
 
+        progressDialog = new ProgressDialog(this);
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
 
-}
 
-    private void signIn() {
-        Intent signInIntent = gsc.getSignInIntent();
-        startActivityForResult(signInIntent,1000);
+        btSignInGoogle.setOnClickListener(view -> {
+            loginGoogle();
+        });
+
+        btnRegister.setOnClickListener(view ->{
+            startActivity(new Intent(MainActivity.this, Register.class));
+        });
+
+        btnLogin.setOnClickListener(view -> {
+            login();
+        });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1000){
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+    // google login
+    private void loginGoogle(){
+        Intent intent = new Intent(MainActivity.this, GoogleSignInActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 
-            try {
-                task.getResult(ApiException.class);
-                navigateToHomeScreen();
-            } catch (ApiException e) {
-                Toast.makeText(getApplicationContext(),"Something went wrong",Toast.LENGTH_LONG).show();
-            }
+    // regular login
+    private void login() {
+        String emailStr = email.getText().toString();
+        String passwordStr = password.getText().toString();
+
+        if (!TextUtils.isEmpty(emailStr) && !Patterns.EMAIL_ADDRESS.matcher(emailStr).matches()) {
+            email.setError("Enter Correct email");
+        } else if (passwordStr.isEmpty() || password.length() < 6) {
+            password.setError("Incorrect Password");
+        } else {
+            progressDialog.setMessage("Logging in...");
+            progressDialog.setTitle("Login");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
+
+            mAuth.signInWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()){
+                        progressDialog.dismiss();
+                        sendUserToNextActivity();
+                        Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT);
+                    } else {
+                        progressDialog.dismiss();
+                        Toast.makeText(MainActivity.this, ""+task.getException(), Toast.LENGTH_SHORT);
+                    }
+                }
+            });
         }
-
     }
 
-    void navigateToHomeScreen() {
-        finish();
-        Intent intent = new Intent(MainActivity.this,HomeScreen.class);
+    // sends user to profile
+    private void sendUserToNextActivity() {
+        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }
