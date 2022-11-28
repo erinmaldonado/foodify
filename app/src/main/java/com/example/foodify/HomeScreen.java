@@ -1,9 +1,16 @@
 package com.example.foodify;
 
+import static android.content.ContentValues.TAG;
+
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,28 +21,46 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +79,18 @@ public class HomeScreen extends AppCompatActivity {
     Button add;
     Button subtract;
 
+    Button addToInventory;
+
+    JsonResponse jsonResponse;
+    String upc;
+    TextView upcText;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
+    // Access a Cloud Firestore instance from your Activity
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static ArrayList<Type> mArrayList = new ArrayList<>();
+    Gson gson = new Gson();
     int minteger = 0;
     private DatabaseReference mDatabase;
 
@@ -61,6 +98,10 @@ public class HomeScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
+
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+
         scanBtn = findViewById(R.id.scan);
         scanBtn.setOnClickListener(view-> {
             scan();
@@ -80,6 +121,16 @@ public class HomeScreen extends AppCompatActivity {
         subtract.setOnClickListener(view ->{
             decreaseInteger();
         });
+
+        addToInventory = findViewById(R.id.add_to_inventory);
+        addToInventory.setOnClickListener(view->{
+            saveUPCToDatabase(upc, minteger);
+        });
+
+    }
+
+    private void getResults(){
+
     }
 
     void signOut(){
@@ -104,21 +155,30 @@ public class HomeScreen extends AppCompatActivity {
 
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
         if(result.getContents() != null){
-            String upc = result.getContents();
+            upc = result.getContents();
             sendUserToBarCodeInfo(upc);
-            saveUPCToDatabase(upc, minteger);
         }
     });
 
     private void saveUPCToDatabase(String upc, int total){
-        // Access a Cloud Firestore instance from your Activity
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
         Map<String, Object> foodUPC = new HashMap<>();
         foodUPC.put("UPC", upc);
         foodUPC.put("total", total);
-        db.collection("foodInfo").document().set(foodUPC, SetOptions.merge());
+        if(total > 0){
+            foodUPC.put("available", true);
+        } else {
+            foodUPC.put("available", false);
+        }
+        foodUPC.put("title", jsonResponse.getTitle());
+        foodUPC.put("uid", mAuth.getCurrentUser().getUid());
+
+        db.collection("foodItem").document(upc+"_"+mAuth.getCurrentUser().getUid()).set(foodUPC, SetOptions.merge());
+        DocumentReference foodRef = db.collection("foodItem").document(upc+"_"+mAuth.getCurrentUser().getUid());
+        foodRef.update("total", minteger)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully updated!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
+
     }
 
     private void sendUserToBarCodeInfo(String upc){
@@ -145,21 +205,24 @@ public class HomeScreen extends AppCompatActivity {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if(response.isSuccessful()){
                     String myResponse = response.body().string();
-                    Gson gson = new Gson();
-                    JsonResponse responseResult=gson.fromJson(myResponse, JsonResponse.class);
+
+                    jsonResponse =gson.fromJson(myResponse, JsonResponse.class);
+
                     HomeScreen.this.runOnUiThread(() ->{
-                        textViewResult.setText(responseResult.getTitle() + " id: " + responseResult.getId());
+                        textViewResult.setText(jsonResponse.getTitle() + " id: " + jsonResponse.getId());
                     });
                 }
             }
+
         });
     }
 
     public void increaseInteger() {
         minteger = minteger + 1;
         display(minteger);
+    }
 
-    }public void decreaseInteger() {
+    public void decreaseInteger() {
         minteger = minteger - 1;
         display(minteger);
     }
