@@ -124,4 +124,3 @@ public class GoogleSignInActivity extends Activity {
     }
 
 }
-

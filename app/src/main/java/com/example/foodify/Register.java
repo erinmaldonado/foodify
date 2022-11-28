@@ -56,7 +56,7 @@ public class Register extends AppCompatActivity {
         });
 
         signUp.setOnClickListener(v ->{
-                auth();
+            auth();
         });
 
     }

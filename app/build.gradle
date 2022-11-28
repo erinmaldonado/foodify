@@ -3,6 +3,10 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+def apikeyPropertiesFile = rootProject.file("apikey.properties")
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+
 android {
     namespace 'com.example.foodify'
     compileSdk 33
@@ -14,6 +18,10 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // should correspond to key/value pairs inside the file
+        buildConfigField("String", "API_KEY", apikeyProperties['API_KEY'])
+
     }
     lint {
         baseline = file("lint-baseline.xml")
@@ -81,5 +89,16 @@ dependencies {
     // define any required OkHttp artifacts without version
     implementation("com.squareup.okhttp3:okhttp:3.12.10")
     implementation("com.squareup.okhttp3:logging-interceptor")
+
+    // Database
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:31.0.2')
+
+    // Declare the dependency for the Cloud Firestore library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-firestore'
+
+    implementation 'com.google.code.gson:gson:2.10'
+
 }
 apply plugin: 'com.google.gms.google-services'

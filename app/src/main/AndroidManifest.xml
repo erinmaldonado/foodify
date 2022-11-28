@@ -48,6 +48,9 @@
             android:name=".ForgotPassword"
             android:parentActivityName=".MainActivity" />
         <activity
+            android:name=".JsonResponse"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".BarcodeScannerActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"

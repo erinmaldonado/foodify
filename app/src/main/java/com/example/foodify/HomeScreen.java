@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
@@ -85,13 +86,14 @@ public class HomeScreen extends AppCompatActivity {
 
     private void sendUserToBarCodeInfo(String upc){
         TextView textViewResult = findViewById(R.id.text_view_result);
+        String Key = BuildConfig.API_KEY;
 
         OkHttpClient client = new OkHttpClient();
         String url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/products/upc/"+upc;
         Request request = new Request.Builder()
                 .url(url)
                 .get()
-                .addHeader("X-RapidAPI-Key", "3ae90ae344mshf1e661c04b53edap122c6ejsnaf4f83978168")
+                .addHeader("X-RapidAPI-Key", Key)
                 .addHeader("X-RapidAPI-Host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com")
                 .build();
 
@@ -106,10 +108,11 @@ public class HomeScreen extends AppCompatActivity {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if(response.isSuccessful()){
                     String myResponse = response.body().string();
-                    HomeScreen.this.runOnUiThread(() -> textViewResult.setText(myResponse));
+                    Gson gson = new Gson();
+                    JsonResponse responseResult=gson.fromJson(myResponse, JsonResponse.class);
+                    HomeScreen.this.runOnUiThread(() -> textViewResult.setText(responseResult.getTitle() + " id: " + responseResult.getId()));
                 }
             }
         });
     }
-
 }
