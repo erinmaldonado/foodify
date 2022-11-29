@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
     // sends user to profile
     private void sendUserToNextActivity() {
-        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+        Intent intent = new Intent(MainActivity.this, HomeScreen.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

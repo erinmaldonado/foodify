@@ -29,8 +29,7 @@ public class HomeScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
-        name = findViewById(R.id.name);
-        email = findViewById(R.id.email);
+
         signOutBtn = findViewById(R.id.signOut);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
@@ -38,12 +37,6 @@ public class HomeScreen extends AppCompatActivity {
 
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-        if(acct!=null){
-            String personName = acct.getDisplayName();
-            String personEmail = acct.getEmail();
-            name.setText(personName);
-            email.setText(personEmail);
-        }
 
         signOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
