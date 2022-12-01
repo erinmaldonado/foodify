@@ -117,7 +117,7 @@ public class GoogleSignInActivity extends Activity {
 
     private void updateUI(FirebaseUser user) {
         if(user != null){
-            startActivity(new Intent(this,HomeScreen.class));
+            startActivity(new Intent(this,Home.class));
         } else {
 
         }

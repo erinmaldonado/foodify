@@ -37,6 +37,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.BuildConfig;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -183,7 +184,8 @@ public class HomeScreen extends AppCompatActivity {
 
     private void sendUserToBarCodeInfo(String upc){
         TextView textViewResult = findViewById(R.id.text_view_result);
-        String Key = BuildConfig.API_KEY;
+        String Key;
+        Key = BuildConfig.BUILD_TYPE; // FIX
 
         OkHttpClient client = new OkHttpClient();
         String url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/food/products/upc/"+upc;

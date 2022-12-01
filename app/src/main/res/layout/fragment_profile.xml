@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ListFragment">
+    tools:context=".ProfileFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -11,7 +11,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="INVENTORY"
+            android:text="PROFILE"
             android:textColor="@color/black"
             android:textSize="25sp"
             android:textStyle="bold"
