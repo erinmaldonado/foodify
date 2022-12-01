@@ -4,7 +4,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
@@ -15,6 +22,8 @@ public class ProfileFragment extends Fragment{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    // Initialize variable
+    Button btnLogin;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -35,4 +44,5 @@ public class ProfileFragment extends Fragment{
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
+
 }
