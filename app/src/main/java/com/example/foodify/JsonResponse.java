@@ -3,7 +3,6 @@ package com.example.foodify;
 import java.net.URI;
 import java.util.List;
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 public class JsonResponse {
     @Expose
