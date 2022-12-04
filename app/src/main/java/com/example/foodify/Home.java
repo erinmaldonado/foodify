@@ -44,5 +44,10 @@ public class Home extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    public void onDestroy(){
+        super.onDestroy();
+        binding = null;
+    }
+
 
 }
