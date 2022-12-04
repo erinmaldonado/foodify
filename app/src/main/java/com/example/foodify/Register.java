@@ -61,11 +61,11 @@ public class Register extends AppCompatActivity {
 
     }
 
-    private void sendUserToNextActivity() {
+    /*private void sendUserToNextActivity() {
         Intent intent = new Intent(Register.this, ProfileActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-    }
+    }*/
 
     private void auth(){
         String emailStr = email.getText().toString();
@@ -87,7 +87,7 @@ public class Register extends AppCompatActivity {
             mAuth.createUserWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(task -> {
                 if(task.isSuccessful()){
                     progressDialog.dismiss();
-                    sendUserToNextActivity();
+                    //sendUserToNextActivity();
                     Toast.makeText(Register.this, "Registration Successful", Toast.LENGTH_SHORT);
                 } else {
                     progressDialog.dismiss();

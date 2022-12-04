@@ -1,37 +1,30 @@
 package com.example.foodify;
 
-import static android.content.ContentValues.TAG;
-
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.google.firebase.BuildConfig;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
+
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -39,19 +32,44 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ScanInfo extends Fragment {
+public class Scan extends Fragment {
     JsonResponse jsonResponse;
     String upc;
-
     Gson gson = new Gson();
     int minteger = 0;
+    Button add;
+    Button subtract;
 
+    Button addToInventory;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_scan_info, container, false);
-        scan();
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        scan();
+        add = view.findViewById(R.id.add);
+        add.setOnClickListener(v ->{
+            increaseInteger();
+        });
+
+        subtract = view.findViewById(R.id.subtract);
+        subtract.setOnClickListener(v ->{
+            decreaseInteger();
+        });
+
+        addToInventory = view.findViewById(R.id.add_to_inventory);
+        addToInventory.setOnClickListener(v->{
+            saveUPCToDatabase(upc, minteger);
+        });
+    }
+
+    private void saveUPCToDatabase(String upc, int total){
+
     }
 
     void scan(){
@@ -67,7 +85,7 @@ public class ScanInfo extends Fragment {
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
         if(result.getContents() != null){
             upc = result.getContents();
-            sendUserToBarCodeInfo(upc);
+            sendUserToBarCodeInfo("041631000564");
         }
     });
 
@@ -88,7 +106,9 @@ public class ScanInfo extends Fragment {
     }
 
     private void sendUserToBarCodeInfo(String upc){
-        TextView textViewResult = getView().findViewById(R.id.textViewResult);
+        TextView foodName = getView().findViewById(R.id.foodTitle);
+        TextView foodUpc = getView().findViewById(R.id.foodUpc);
+        TextView foodServings = getView().findViewById(R.id.foodServings);
         String Key;
         Key = "55d01a0c91msh1a5d4e55f6cf63cp174b8bjsn419908648873"; // FIX
 
@@ -113,10 +133,17 @@ public class ScanInfo extends Fragment {
                 if(response.isSuccessful()){
                     String myResponse = response.body().string();
 
+                    GsonBuilder builder = new GsonBuilder();
+                    builder.serializeNulls();
+                    builder.setPrettyPrinting();
+                    Gson gson = builder.create();
+
                     jsonResponse =gson.fromJson(myResponse, JsonResponse.class);
 
                     getActivity().runOnUiThread(() ->{
-                        textViewResult.setText(jsonResponse.getTitle() + " id: " + jsonResponse.getId());
+                        foodName.setText(jsonResponse.getTitle() + " id: " + jsonResponse.getId());
+                        foodUpc.setText(upc);
+                        foodServings.setText(jsonResponse.toString());
                     });
                 }
             }

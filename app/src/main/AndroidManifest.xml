@@ -39,9 +39,6 @@
             android:name=".GoogleSignInActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".ProfileActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
             android:name=".Register"
             android:parentActivityName=".MainActivity" />
         <activity
@@ -57,7 +54,7 @@
             android:name=".HomeFragment"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".ScanInfo"
+            android:name=".Scan"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".BarcodeScannerActivity"

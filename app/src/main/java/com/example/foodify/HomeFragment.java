@@ -9,7 +9,6 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,9 +39,9 @@ public class HomeFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
         scanBtn = view.findViewById(R.id.scanBtn);
         scanBtn.setOnClickListener(v -> {
-            ScanInfo scanInfo = new ScanInfo();
+            Scan scan = new Scan();
             FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame_layout, scanInfo);
+            fragmentTransaction.replace(R.id.frame_layout, scan);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         });
