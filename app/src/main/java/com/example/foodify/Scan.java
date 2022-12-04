@@ -1,30 +1,54 @@
 package com.example.foodify;
 
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.provider.MediaStore;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
+import com.example.foodify.databinding.ActivityHomeBinding;
+import com.example.foodify.databinding.ActivityMainBinding;
+import com.example.foodify.databinding.FragmentScanInfoBinding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import org.jsoup.Jsoup;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -39,8 +63,11 @@ public class Scan extends Fragment {
     int minteger = 0;
     Button add;
     Button subtract;
+    private RecyclerView recyclerview;
+    private ArrayList<FoodItem> inventoryArrayList;
 
     Button addToInventory;
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -85,7 +112,7 @@ public class Scan extends Fragment {
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
         if(result.getContents() != null){
             upc = result.getContents();
-            sendUserToBarCodeInfo("041631000564");
+            sendUserToBarCodeInfo(upc);
         }
     });
 
@@ -108,7 +135,9 @@ public class Scan extends Fragment {
     private void sendUserToBarCodeInfo(String upc){
         TextView foodName = getView().findViewById(R.id.foodTitle);
         TextView foodUpc = getView().findViewById(R.id.foodUpc);
-        TextView foodServings = getView().findViewById(R.id.foodServings);
+        TextView info = getView().findViewById(R.id.info);
+        ImageView imageView = getView().findViewById(R.id.imageView);
+
         String Key;
         Key = "55d01a0c91msh1a5d4e55f6cf63cp174b8bjsn419908648873"; // FIX
 
@@ -143,11 +172,17 @@ public class Scan extends Fragment {
                     getActivity().runOnUiThread(() ->{
                         foodName.setText(jsonResponse.getTitle() + " id: " + jsonResponse.getId());
                         foodUpc.setText(upc);
-                        foodServings.setText(jsonResponse.toString());
+                        info.setText(jsonResponse.toString());
+                        String url = jsonResponse.getImages().get(2).toString();
+                        ImageView imageView = (ImageView) getView().findViewById(R.id.imageView);
+                        Glide.with(getActivity()).load(url).into(imageView);
+
                     });
                 }
             }
 
         });
     }
+
 }
+
