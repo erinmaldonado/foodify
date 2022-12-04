@@ -95,8 +95,8 @@ public class Scan extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<String> list = new ArrayList<>();
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String comment = ds.getValue(String.class);
-                    list.add(comment);
+                    String foodItem = ds.getValue(String.class);
+                    list.add(foodItem);
                 }
                 //Do what you need to do with your list
             }
@@ -116,7 +116,6 @@ public class Scan extends Fragment {
         itemInfo.put("uri", uri);
         map.put(upc, itemInfo);
         rootRef.child(user.getUid()).child("foodList").updateChildren(map);
-
     }
 
     void scan(){

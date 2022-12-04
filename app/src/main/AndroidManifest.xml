@@ -57,6 +57,9 @@
             android:name=".Scan"
             android:parentActivityName=".MainActivity" />
         <activity
+            android:name=".ListFragment"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".BarcodeScannerActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"

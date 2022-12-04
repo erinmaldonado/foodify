@@ -147,6 +147,6 @@ public class JsonResponse {
     }
 
     public String toString(){
-        return generatedText + " \n" + badges;
+        return badges.toString();
     }
 }
