@@ -1,5 +1,7 @@
 package com.example.foodify;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +40,13 @@ import com.bumptech.glide.Glide;
 import com.example.foodify.databinding.ActivityHomeBinding;
 import com.example.foodify.databinding.ActivityMainBinding;
 import com.example.foodify.databinding.FragmentScanInfoBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.journeyapps.barcodescanner.ScanContract;
@@ -49,6 +59,9 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -57,16 +70,15 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class Scan extends Fragment {
-    JsonResponse jsonResponse;
-    String upc;
-    Gson gson = new Gson();
-    int minteger = 0;
-    Button add;
-    Button subtract;
-    private RecyclerView recyclerview;
-    private ArrayList<FoodItem> inventoryArrayList;
+    private JsonResponse jsonResponse;
+    private String upc;
+    private int minteger = 0;
+    private Button add;
+    private Button subtract;
+    private Button addToInventory;
+    private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    private DatabaseReference root = db.getReference();
 
-    Button addToInventory;
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Nullable
     @Override
@@ -90,12 +102,41 @@ public class Scan extends Fragment {
         });
 
         addToInventory = view.findViewById(R.id.add_to_inventory);
-        addToInventory.setOnClickListener(v->{
-            saveUPCToDatabase(upc, minteger);
-        });
+
     }
 
-    private void saveUPCToDatabase(String upc, int total){
+    private void saveUPCToDatabase(String title, String upc, int total, String response, String uri){
+        FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference listIdRef = rootRef.child(user.getUid()).child("foodItem");
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<String> list = new ArrayList<>();
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String comment = ds.getValue(String.class);
+                    list.add(comment);
+                }
+                //Do what you need to do with your list
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, databaseError.getMessage());
+            }
+        };
+
+        listIdRef.addListenerForSingleValueEvent(valueEventListener);
+        Map<String, Object> map = new HashMap<>();
+        HashMap<String, Object> itemInfo = new HashMap<>();
+        itemInfo.put("title", title);
+        itemInfo.put("total", total);
+        itemInfo.put("response", response);
+        itemInfo.put("uri", uri);
+        map.put(upc, itemInfo);
+        rootRef.child(user.getUid()).child("foodList").updateChildren(map);
 
     }
 
@@ -176,7 +217,10 @@ public class Scan extends Fragment {
                         String url = jsonResponse.getImages().get(2).toString();
                         ImageView imageView = (ImageView) getView().findViewById(R.id.imageView);
                         Glide.with(getActivity()).load(url).into(imageView);
+                    });
 
+                    addToInventory.setOnClickListener(v->{
+                        saveUPCToDatabase(jsonResponse.getTitle(), upc, minteger, jsonResponse.toString(), url);
                     });
                 }
             }
