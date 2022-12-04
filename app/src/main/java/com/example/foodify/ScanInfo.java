@@ -71,7 +71,21 @@ public class ScanInfo extends Fragment {
         }
     });
 
+    public void increaseInteger() {
+        minteger = minteger + 1;
+        display(minteger);
+    }
 
+    public void decreaseInteger() {
+        minteger = minteger - 1;
+        display(minteger);
+    }
+
+    private void display(int number) {
+        TextView displayInteger = (TextView) getView().findViewById(
+                R.id.total);
+        displayInteger.setText("" + number);
+    }
 
     private void sendUserToBarCodeInfo(String upc){
         TextView textViewResult = getView().findViewById(R.id.textViewResult);
@@ -108,12 +122,5 @@ public class ScanInfo extends Fragment {
             }
 
         });
-    }
-
-
-    private void display(int number) {
-        TextView displayInteger = (TextView) getView().findViewById(
-                R.id.total);
-        displayInteger.setText("" + number);
     }
 }
