@@ -1,24 +1,15 @@
 package com.example.foodify.fragments;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.foodify.Listeners.RandomRecipeResponseListener;
-import com.example.foodify.Models.RandomRecipeApiResponse;
 
 import com.example.foodify.R;
 
 public class RecipesFragment extends Fragment {
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -32,47 +23,20 @@ public class RecipesFragment extends Fragment {
         // Required empty public constructor
     }
 
-    ProgressDialog dialog;
-    RequestManager manager;
-    RandomRecipeAdapter adapter;
-    RecyclerView recyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        dialog = new ProgressDialog(getContext());
-        dialog.setTitle("Loading...");
-
-        manager = new RequestManager(getContext());
-        manager.getRandomRecipes(randomRecipeResponseListener);
-        dialog.show();
-
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
     }
 
-    private final RandomRecipeResponseListener randomRecipeResponseListener = new RandomRecipeResponseListener() {
-
-        @Override
-        public void didFetch(RandomRecipeApiResponse response, String message) {
-            dialog.dismiss();
-            recyclerView = getView().findViewById(R.id.randomRecipeRecycler);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(),1));
-            adapter = new RandomRecipeAdapter(getContext(), response.getRecipes());
-            recyclerView.setAdapter(adapter);
-        }
-
-        @Override
-        public void didError(String message) {
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        }
-    };
-
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {// Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_recipes, container, false);
     }
 }

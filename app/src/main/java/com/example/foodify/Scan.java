@@ -132,7 +132,7 @@ public class Scan extends Fragment {
     ActivityResultLauncher<ScanOptions> barLauncher = registerForActivityResult(new ScanContract(), result -> {
         if(result.getContents() != null){
             upc = result.getContents();
-            sendUserToBarCodeInfo(upc);
+            sendUserToBarCodeInfo("041631000564");
         }
     });
 
@@ -195,7 +195,7 @@ public class Scan extends Fragment {
                             info.setText(jsonResponse.toString());
                             uri[0] = jsonResponse.getImages().get(2).toString();
                             ImageView imageView = (ImageView) getView().findViewById(R.id.imageView);
-                            Glide.with(getActivity()).load(url).into(imageView);
+                            Glide.with(getActivity()).load(uri[0]).into(imageView);
                         });
                     }
 
