@@ -32,14 +32,16 @@
         </activity>
 
         <activity
-            android:name=".HomeScreen"
-            android:parentActivityName=".MainActivity" />
-
-        <activity
             android:name=".GoogleSignInActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".Register"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".FoodItemAdapter"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".FoodItem"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ForgotPassword"

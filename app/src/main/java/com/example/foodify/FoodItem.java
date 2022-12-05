@@ -1,5 +1,7 @@
 package com.example.foodify;
 
+import android.net.Uri;
+
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -14,8 +16,6 @@ public class FoodItem {
     public String response;
     public int total = 0;
     public String uri;
-
-    public Map<String, Boolean> stars = new HashMap<>();
 
     public FoodItem() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -187,19 +188,22 @@ public class Scan extends Fragment {
                     Gson gson = builder.create();
 
                     jsonResponse =gson.fromJson(myResponse, JsonResponse.class);
+                    if(!myResponse.contains("not find")){
+                        getActivity().runOnUiThread(() ->{
+                            foodName.setText(jsonResponse.getTitle() + " id: " + jsonResponse.getId());
+                            foodUpc.setText(upc);
+                            info.setText(jsonResponse.toString());
+                            String url = jsonResponse.getImages().get(2).toString();
+                            ImageView imageView = (ImageView) getView().findViewById(R.id.imageView);
+                            Glide.with(getActivity()).load(url).into(imageView);
+                        });
+                    }
 
-                    getActivity().runOnUiThread(() ->{
-                        foodName.setText(jsonResponse.getTitle() + " id: " + jsonResponse.getId());
-                        foodUpc.setText(upc);
-                        info.setText(jsonResponse.toString());
-                        String url = jsonResponse.getImages().get(2).toString();
-                        ImageView imageView = (ImageView) getView().findViewById(R.id.imageView);
-                        Glide.with(getActivity()).load(url).into(imageView);
-                    });
-
-                    addToInventory.setOnClickListener(v->{
+                    addToInventory.setOnClickListener(view -> {
                         saveUPCToDatabase(jsonResponse.getTitle(), upc, minteger, jsonResponse.toString(), url);
+                        Toast.makeText(getActivity(), "item added", Toast.LENGTH_SHORT).show();
                     });
+
                 }
             }
 

@@ -1,9 +1,6 @@
 package com.example.foodify;
 
-import static android.content.ContentValues.TAG;
-
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +10,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -30,13 +26,14 @@ import java.util.List;
 
 public class ListFragment extends Fragment {
 
-    ListView listView;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     private FirebaseAuth auth;
     FirebaseUser user;
-    List<FoodItem> foodList = new ArrayList<>();
+    ListView listView;
+    ArrayList<FoodItem> arrayList;
     ArrayAdapter<FoodItem> arrayAdapter;
+
     public ListFragment() {
         // Required empty public constructor
     }
@@ -59,41 +56,25 @@ public class ListFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(userId+"/foodList");
 
-
         listView = (ListView) view.findViewById(R.id.foodItemView);
+         arrayList = new ArrayList<>();
+        arrayAdapter = new ArrayAdapter<FoodItem>(getActivity(), android.R.layout.simple_list_item_1, arrayList);
 
-        Toast.makeText(getActivity(), "ok", Toast.LENGTH_SHORT).show();
-        databaseReference.addChildEventListener(new ChildEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                FoodItem value=dataSnapshot.getValue(FoodItem.class);
-                foodList.add(value);
-                arrayAdapter = new ArrayAdapter<FoodItem>(getActivity(), android.R.layout.simple_list_item_1, foodList);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    FoodItem foodItem= ds.getValue(FoodItem.class);
+                    arrayList.add(foodItem);
+                }
                 listView.setAdapter(arrayAdapter);
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-
-        //TODO
         return view;
     }
 }

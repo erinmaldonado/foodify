@@ -1,10 +1,13 @@
 package com.example.foodify;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,15 +16,33 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
-    private ArrayList<Inventory> inventoryArrayList;
-    private String[] foodName;
-    private int[] imageResource;
     private RecyclerView recyclerview;
 
     private Button scanBtn;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+    private FirebaseAuth auth;
+    FirebaseUser user;
+
+    RecyclerView recyclerView;
+    ArrayList<FoodItem> list;
+    //FoodItemAdapter myAdapter;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -51,44 +72,39 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        dataInitialize();
-
-        recyclerview = view.findViewById(R.id.inventoryRecView);
-        recyclerview.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
-        recyclerview.setHasFixedSize(true);
-        FoodDisplayAdapter adapter = new FoodDisplayAdapter(getContext(),inventoryArrayList);
-        recyclerview.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-
+        addPostEventListener();
     }
 
-    private void dataInitialize() {
+    private void addPostEventListener() {
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        String userId = user.getUid();
 
-        inventoryArrayList = new ArrayList<>();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        //recyclerView = getView().findViewById(R.id.inventoryRecView);
+        //databaseReference = firebaseDatabase.getReference(userId);
+        /*
+        recyclerView.setHasFixedSize(true);
+        list = new ArrayList<>();
+        myAdapter = new FoodItemAdapter(getContext(), list);
+        recyclerView.setAdapter(myAdapter);
 
-        foodName = new String[]{
-                getString(R.string.food_1),
-                getString(R.string.food_2),
-                getString(R.string.food_3),
-                getString(R.string.food_4),
-                getString(R.string.food_5),
-                getString(R.string.food_6),
-                getString(R.string.food_7)
-        };
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                    FoodItem foodItem = dataSnapshot.getValue(FoodItem.class);
+                    list.add(foodItem);
+                }
+                myAdapter.notifyDataSetChanged();
+            }
 
-        imageResource = new int[]{
-                R.drawable.apple,
-                R.drawable.tomato,
-                R.drawable.carrot,
-                R.drawable.bacon,
-                R.drawable.white_bread,
-                R.drawable.lettuce,
-                R.drawable.mayo
-        };
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-        for (int i= 0; i<foodName.length;i++){
-            Inventory inventory = new Inventory(foodName[i],imageResource[i]);
-            inventoryArrayList.add(inventory);
-        }
+            }
+        });
+
+         */
     }
 }
