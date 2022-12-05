@@ -60,14 +60,18 @@ public class ListFragment extends Fragment {
          arrayList = new ArrayList<>();
         arrayAdapter = new ArrayAdapter<FoodItem>(getActivity(), android.R.layout.simple_list_item_1, arrayList);
 
+        // Only works if scan is done first
+        //TODO
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds: snapshot.getChildren()){
-                    FoodItem foodItem= ds.getValue(FoodItem.class);
-                    arrayList.add(foodItem);
+                if(snapshot.exists()){
+                    for(DataSnapshot ds: snapshot.getChildren()){
+                        FoodItem foodItem= ds.getValue(FoodItem.class);
+                        arrayList.add(foodItem);
+                    }
+                    listView.setAdapter(arrayAdapter);
                 }
-                listView.setAdapter(arrayAdapter);
             }
 
             @Override
