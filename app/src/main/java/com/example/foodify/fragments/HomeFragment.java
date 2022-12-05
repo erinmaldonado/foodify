@@ -10,10 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,10 +19,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.foodify.FoodItem;
 import com.example.foodify.FoodItemAdapter;
-import com.example.foodify.JsonResponse;
 import com.example.foodify.R;
 import com.example.foodify.Scan;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,37 +34,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
 public class HomeFragment extends Fragment {
-    private RecyclerView recyclerview;
-
     private Button scanBtn;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     private FirebaseAuth auth;
     FirebaseUser user;
 
-    //RecyclerView recyclerView;
     ArrayList<FoodItem> list;
     FoodItemAdapter myAdapter;
-    private JsonResponse jsonResponse;
 
-    private RecyclerView.Adapter recyclerViewAdapter;
     private RecyclerView recyclerView;
 
     public HomeFragment() {
@@ -115,7 +96,7 @@ public class HomeFragment extends Fragment {
 
         recyclerView = getView().findViewById(R.id.inventoryRecView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false));
 
         list = new ArrayList<>();
         myAdapter = new FoodItemAdapter(getContext(), list);
@@ -139,4 +120,5 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
 }
