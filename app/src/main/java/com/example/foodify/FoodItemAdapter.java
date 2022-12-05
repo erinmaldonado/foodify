@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-/*
+
 public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.ViewHolder> {
 
     Context context;
@@ -33,8 +33,8 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FoodItem foodItem  = foodItems.get(position);
-        holder.image.setImageURI(Uri.parse(foodItem.getUri()));
-        holder.total.setText(foodItem.getTitle());
+        holder.image.setImageURI(Uri.parse(foodItem.uri));
+        holder.total.setText(foodItem.title);
     }
     
     @Override
@@ -53,4 +53,4 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.ViewHo
             total = itemView.findViewById(R.id.foodName);
         }
     }
-}*/
+}

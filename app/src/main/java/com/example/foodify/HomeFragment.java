@@ -1,5 +1,7 @@
 package com.example.foodify;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,9 +27,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -41,7 +45,7 @@ public class HomeFragment extends Fragment {
 
     RecyclerView recyclerView;
     ArrayList<FoodItem> list;
-    //FoodItemAdapter myAdapter;
+    FoodItemAdapter myAdapter;
 
 
     public HomeFragment() {
@@ -72,6 +76,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //Offline support
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         addPostEventListener();
     }
 
@@ -81,10 +87,12 @@ public class HomeFragment extends Fragment {
         String userId = user.getUid();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        //recyclerView = getView().findViewById(R.id.inventoryRecView);
-        //databaseReference = firebaseDatabase.getReference(userId);
-        /*
+        databaseReference = firebaseDatabase.getReference(userId+"/foodList");
+
+        recyclerView = getView().findViewById(R.id.inventoryRecView);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         list = new ArrayList<>();
         myAdapter = new FoodItemAdapter(getContext(), list);
         recyclerView.setAdapter(myAdapter);
@@ -92,11 +100,13 @@ public class HomeFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
-                    FoodItem foodItem = dataSnapshot.getValue(FoodItem.class);
-                    list.add(foodItem);
+                if(snapshot.exists()){
+                    for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                        FoodItem foodItem = dataSnapshot.getValue(FoodItem.class);
+                        list.add(foodItem);
+                    }
+                    myAdapter.notifyDataSetChanged();
                 }
-                myAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -104,7 +114,5 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
-         */
     }
 }
