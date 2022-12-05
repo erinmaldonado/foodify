@@ -1,6 +1,7 @@
 package com.example.foodify;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-
-public class FoodDisplayAdapter extends RecyclerView.Adapter<FoodDisplayAdapter.ViewHolder> {
+/*
+public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.ViewHolder> {
 
     Context context;
-    ArrayList<Inventory> inventoryArrayList;
+    ArrayList<FoodItem> foodItems;
 
-    public FoodDisplayAdapter(Context context, ArrayList<Inventory> inventoryArrayList) {
+    public FoodItemAdapter(Context context, ArrayList<FoodItem> foodItems) {
         this.context = context;
-        this.inventoryArrayList = inventoryArrayList;
+        this.foodItems = foodItems;
     }
 
     @NonNull
@@ -31,27 +32,25 @@ public class FoodDisplayAdapter extends RecyclerView.Adapter<FoodDisplayAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-        Inventory inventory  = inventoryArrayList.get(position);
-        holder.foodName.setText(inventory.foodNames);
-        holder.foodImage.setImageResource(inventory.foodImages);
-
+        FoodItem foodItem  = foodItems.get(position);
+        holder.image.setImageURI(Uri.parse(foodItem.getUri()));
+        holder.total.setText(foodItem.getTitle());
     }
-
+    
     @Override
     public int getItemCount() {
-        return inventoryArrayList.size();
+        return foodItems.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        private ImageView foodImage;
-        private TextView foodName;
+        private ImageView image;
+        private TextView total;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            foodImage = itemView.findViewById(R.id.foodImage);
-            foodName = itemView.findViewById(R.id.foodName);
+            image = itemView.findViewById(R.id.foodImage);
+            total = itemView.findViewById(R.id.foodName);
         }
     }
-}
+}*/
