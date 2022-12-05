@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class FoodDisplayAdapter extends RecyclerView.Adapter<FoodDisplayAdapter.ViewHolder> {
 
-    Context context;
+    static Context context;
     ArrayList<Inventory> inventoryArrayList;
 
     public FoodDisplayAdapter(Context context, ArrayList<Inventory> inventoryArrayList) {
@@ -31,7 +31,6 @@ public class FoodDisplayAdapter extends RecyclerView.Adapter<FoodDisplayAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         Inventory inventory  = inventoryArrayList.get(position);
         holder.foodName.setText(inventory.foodNames);
         holder.foodImage.setImageResource(inventory.foodImages);
@@ -43,7 +42,7 @@ public class FoodDisplayAdapter extends RecyclerView.Adapter<FoodDisplayAdapter.
         return inventoryArrayList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
 
         private ImageView foodImage;
         private TextView foodName;

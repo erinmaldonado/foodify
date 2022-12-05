@@ -1,7 +1,10 @@
 package com.example.foodify;
 
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +14,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.ViewHolder> {
 
@@ -33,8 +48,8 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FoodItem foodItem  = foodItems.get(position);
-        holder.image.setImageURI(Uri.parse(foodItem.uri));
-        holder.total.setText(foodItem.title);
+        Glide.with(context).load(foodItem.getUri()).into(holder.image);
+        holder.total.setText(foodItem.getTitle());
     }
     
     @Override
@@ -42,8 +57,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.ViewHo
         return foodItems.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         private ImageView image;
         private TextView total;
 
@@ -51,6 +65,8 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.ViewHo
             super(itemView);
             image = itemView.findViewById(R.id.foodImage);
             total = itemView.findViewById(R.id.foodName);
+
+
         }
     }
 }

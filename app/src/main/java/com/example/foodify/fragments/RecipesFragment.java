@@ -1,4 +1,4 @@
-package com.example.foodify;
+package com.example.foodify.fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodify.Listeners.RandomRecipeResponseListener;
 import com.example.foodify.Models.RandomRecipeApiResponse;
+
+import com.example.foodify.R;
 
 public class RecipesFragment extends Fragment {
 
