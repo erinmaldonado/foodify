@@ -73,7 +73,7 @@ public class FoodItem {
     }
 
     public String toString(){
-        return title + " \ttotal: " + total;
+        return title + " " + total;
     }
     // [END post_to_map]
 }

@@ -157,7 +157,7 @@ public class Scan extends Fragment {
         TextView foodUpc = getView().findViewById(R.id.foodUpc);
         TextView info = getView().findViewById(R.id.info);
         ImageView imageView = getView().findViewById(R.id.imageView);
-
+        final String[] uri = new String[1];
         String Key;
         Key = "55d01a0c91msh1a5d4e55f6cf63cp174b8bjsn419908648873"; // FIX
 
@@ -193,14 +193,14 @@ public class Scan extends Fragment {
                             foodName.setText(jsonResponse.getTitle() + " id: " + jsonResponse.getId());
                             foodUpc.setText(upc);
                             info.setText(jsonResponse.toString());
-                            String url = jsonResponse.getImages().get(2).toString();
+                            uri[0] = jsonResponse.getImages().get(2).toString();
                             ImageView imageView = (ImageView) getView().findViewById(R.id.imageView);
                             Glide.with(getActivity()).load(url).into(imageView);
                         });
                     }
 
                     addToInventory.setOnClickListener(view -> {
-                        saveUPCToDatabase(jsonResponse.getTitle(), upc, minteger, jsonResponse.toString(), url);
+                        saveUPCToDatabase(jsonResponse.getTitle(), upc, minteger, jsonResponse.toString(), uri[0]);
                         Toast.makeText(getActivity(), "item added", Toast.LENGTH_SHORT).show();
                     });
 

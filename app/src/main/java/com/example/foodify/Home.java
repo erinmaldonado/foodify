@@ -8,6 +8,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.foodify.databinding.ActivityHomeBinding;
+import com.example.foodify.fragments.HomeFragment;
+import com.example.foodify.fragments.ListFragment;
+import com.example.foodify.fragments.ProfileFragment;
+import com.example.foodify.fragments.RecipesFragment;
 
 public class Home extends AppCompatActivity {
     ActivityHomeBinding binding;

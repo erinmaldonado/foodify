@@ -1,7 +1,8 @@
-package com.example.foodify;
+package com.example.foodify.fragments;
 
 import static android.content.ContentValues.TAG;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +22,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.foodify.FoodItem;
+import com.example.foodify.FoodItemAdapter;
+import com.example.foodify.JsonResponse;
+import com.example.foodify.R;
+import com.example.foodify.Scan;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,10 +39,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class HomeFragment extends Fragment {
     private RecyclerView recyclerview;
@@ -43,10 +64,13 @@ public class HomeFragment extends Fragment {
     private FirebaseAuth auth;
     FirebaseUser user;
 
-    RecyclerView recyclerView;
+    //RecyclerView recyclerView;
     ArrayList<FoodItem> list;
     FoodItemAdapter myAdapter;
+    private JsonResponse jsonResponse;
 
+    private RecyclerView.Adapter recyclerViewAdapter;
+    private RecyclerView recyclerView;
 
     public HomeFragment() {
         // Required empty public constructor

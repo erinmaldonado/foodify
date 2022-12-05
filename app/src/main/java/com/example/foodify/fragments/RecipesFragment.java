@@ -1,4 +1,4 @@
-package com.example.foodify;
+package com.example.foodify.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+
+import com.example.foodify.R;
 
 public class RecipesFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
