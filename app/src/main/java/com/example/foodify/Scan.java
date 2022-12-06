@@ -164,7 +164,7 @@ public class Scan extends Fragment {
         TextView foodName = getView().findViewById(R.id.foodTitle);
         TextView foodUpc = getView().findViewById(R.id.foodUpc);
         TextView info = getView().findViewById(R.id.info);
-        ImageView imageView = getView().findViewById(R.id.imageView);
+        TextView htmlContent = getView().findViewById(R.id.htmlText);
         final String[] uri = new String[1];
 
         String Key;
@@ -201,27 +201,46 @@ public class Scan extends Fragment {
                     String title = null;
                     JSONArray badgesArray = new JSONArray();
                     JSONArray imagesArray = new JSONArray();
+                    JSONArray nutritionArray = new JSONArray();
+                    JSONObject nutrition = null;
+
+                    try {
+                        nutrition = jsonResult.getJSONObject("nutrition");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                     String[] badges = new String[0];
                     String[] images = new String[0];
+                    String[] nutrients = new String[0];
+
                     try {
                         title = (String) jsonResult.get("title");
                         badgesArray = (JSONArray) jsonResult.get("badges");
                         imagesArray = (JSONArray) jsonResult.get("images");
+                        nutritionArray = nutrition.getJSONArray("nutrients");
 
                         List<String> badgesList = new ArrayList<String>();
                         List<String> imagesList = new ArrayList<String>();
+                        List<String> nutritionList = new ArrayList<String>();
+
                         for (int i = 0; i < badgesArray.length(); i++) {
                             badgesList.add(badgesArray.getString(i));
                         }
                         for (int i = 0; i < imagesArray.length(); i++) {
                             imagesList.add(imagesArray.getString(i));
                         }
+                        for (int i = 0; i < nutritionArray.length(); i++) {
+                            nutritionList.add(nutritionArray.getString(i));
+                        }
 
                         int badgeSize = badgesList.size();
                         int imageSize = imagesList.size();
+                        int nutritionSize = nutritionList.size();
+
                         badges = badgesList.toArray(new String[badgeSize]);
                         images = imagesList.toArray(new String[imageSize]);
-
+                        nutrients = nutritionList.toArray(new String[nutritionSize]);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -232,7 +251,10 @@ public class Scan extends Fragment {
                         String finalTitle = title;
                         String[] finalBadges = badges;
                         String[] finalImages = images;
+                        String[] finalNutrients = nutrients;
+
                         ((Activity) requireContext()).runOnUiThread(() -> {
+                            htmlContent.setText(Arrays.toString(finalNutrients));
                             foodName.setText(finalTitle);
                             foodUpc.setText(upc);
                             info.setText(Arrays.toString(finalBadges));
