@@ -12,5 +12,7 @@ public class SearchRecipesByIngredientsResponse {
     public ArrayList<MissedIngredient> missedIngredients;
     public ArrayList<UsedIngredient> usedIngredients;
     public ArrayList<Object> unusedIngredients;
+    public ArrayList<Recipe> recipes;
     public int likes;
+
 }

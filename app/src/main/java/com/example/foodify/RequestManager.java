@@ -23,18 +23,23 @@ public class RequestManager {
     public RequestManager(Context context) {
         this.context = context;
     }
+
     public void searchRecipesByIngredients(SearchRecipesByIngredientsResponseListener Listener){
         CallRecipesByIngredients callRecipesByIngredients = retrofit.create(CallRecipesByIngredients.class);
         Call<SearchRecipesByIngredientsResponse> call = callRecipesByIngredients.callRecipesByIngredients(context.getString(R.string.api_key),"1");
         call.enqueue(new Callback<SearchRecipesByIngredientsResponse>() {
             @Override
             public void onResponse(Call<SearchRecipesByIngredientsResponse> call, Response<SearchRecipesByIngredientsResponse> response) {
-                
+                if(!response.isSuccessful()){
+                    Listener.didError(response.message());
+                    return;
+                }
+                Listener.didFetch(response.body(), response.message());
             }
 
             @Override
             public void onFailure(Call<SearchRecipesByIngredientsResponse> call, Throwable t) {
-
+                Listener.didError(t.getMessage());
             }
         });
     }

@@ -62,6 +62,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginStart="30dp"
             tools:listitem="@layout/recepies_list"
+            android:id="@+id/searchRecipesByIngredientRecycler"
            android:paddingBottom="0dp"/>
 
 
