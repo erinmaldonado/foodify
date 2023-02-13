@@ -39,7 +39,7 @@ public class RequestManager {
 
             @Override
             public void onFailure(Call<SearchRecipesByIngredientsResponse> call, Throwable t) {
-                Listener.didError(t.getMessage());
+                Listener.didError(t.getMessage()) ;
             }
         });
     }
