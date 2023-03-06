@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/searchRecipesByIngredientsContainer"
+    android:id="@+id/randomRecipesCardView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@color/white"
     app:cardElevation="8dp"
@@ -96,11 +96,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView_Favorite"
+                    android:id="@+id/textView_Likes"
                     android:textSize="14sp"
                     android:padding="8dp"
                     android:textColor="@color/black"
-                    android:text="Favorite">
+                    android:text="Likes">
 
                 </TextView>
             </LinearLayout>

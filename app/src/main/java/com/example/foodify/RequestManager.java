@@ -2,8 +2,8 @@ package com.example.foodify;
 
 import android.content.Context;
 
-import com.example.foodify.Listener.SearchRecipesByIngredientsResponseListener;
-import com.example.foodify.models.SearchRecipesByIngredientsResponse;
+import com.example.foodify.Listeners.RandomRecipeResponseListener;
+import com.example.foodify.Models.RandomRecipeApiResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,31 +24,30 @@ public class RequestManager {
         this.context = context;
     }
 
-    public void searchRecipesByIngredients(SearchRecipesByIngredientsResponseListener Listener){
-        CallRecipesByIngredients callRecipesByIngredients = retrofit.create(CallRecipesByIngredients.class);
-        Call<SearchRecipesByIngredientsResponse> call = callRecipesByIngredients.callRecipesByIngredients(context.getString(R.string.api_key),"1");
-        call.enqueue(new Callback<SearchRecipesByIngredientsResponse>() {
+    public void  getRandomRecipes(RandomRecipeResponseListener listener){
+        CallRandomRecipes callRandomRecipes = retrofit.create(CallRandomRecipes.class);
+        Call<RandomRecipeApiResponse> call = callRandomRecipes.callRandomRecipes(context.getString(R.string.api_key),"10");
+        call.enqueue(new Callback<RandomRecipeApiResponse>() {
             @Override
-            public void onResponse(Call<SearchRecipesByIngredientsResponse> call, Response<SearchRecipesByIngredientsResponse> response) {
+            public void onResponse(Call<RandomRecipeApiResponse> call, Response<RandomRecipeApiResponse> response) {
                 if(!response.isSuccessful()){
-                    Listener.didError(response.message());
+                    listener.didError(response.message());
                     return;
                 }
-                Listener.didFetch(response.body(), response.message());
+                listener.didFetch(response.body(),response.message());
             }
 
             @Override
-            public void onFailure(Call<SearchRecipesByIngredientsResponse> call, Throwable t) {
-                Listener.didError(t.getMessage()) ;
+            public void onFailure(Call<RandomRecipeApiResponse> call, Throwable t) {
+                listener.didError(t.getMessage());
             }
         });
     }
-
-    private interface CallRecipesByIngredients{
-        @GET("recipes/findByIngredients")
-        Call<SearchRecipesByIngredientsResponse> callRecipesByIngredients(
+    private interface CallRandomRecipes{
+        @GET("recipes/random")
+        Call<RandomRecipeApiResponse> callRandomRecipes(
                 @Query("apiKey") String apiKey,
-                @Query("ranking") String number
+                @Query("number") String number
         );
     }
 }

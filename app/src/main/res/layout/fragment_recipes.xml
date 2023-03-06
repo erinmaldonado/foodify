@@ -21,48 +21,15 @@
             android:layout_marginTop="45dp"
             android:layout_marginStart="15dp"/>
 
-        <TextView
-            android:id="@+id/featuredRecipeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Featured"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:layout_marginTop="10dp"
-            android:textStyle="bold"
-            android:layout_below="@+id/recipesText"
-            android:layout_marginStart="30dp"/>
-
-        <ImageView
-            android:id="@+id/featuredRecipeImg"
-            android:layout_width="345dp"
-            android:layout_height="221dp"
-            android:layout_below="@+id/featuredRecipeText"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="15dp"
-            tools:src="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/yourRectext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Your Recepies"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:layout_marginTop="10dp"
-            android:textStyle="bold"
-            android:layout_below="@+id/featuredRecipeImg"
-            android:layout_marginStart="30dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/yourRectext"
+            android:layout_below="@+id/recipesText"
             android:layout_marginTop="10dp"
             android:layout_marginStart="30dp"
             tools:listitem="@layout/recepies_list"
-            android:id="@+id/searchRecipesByIngredientRecycler"
+            android:id="@+id/randomRecipeRecycler"
            android:paddingBottom="0dp"/>
 
 
