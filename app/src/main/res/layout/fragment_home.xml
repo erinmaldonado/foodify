@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    tools:context=".fragments.HomeFragment">
 
     <RelativeLayout
         android:id="@+id/displayFood"
@@ -53,7 +53,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/inventoryRecView"
             android:layout_width="wrap_content"
-            android:layout_height="165dp"
+            android:layout_height="175dp"
             android:layout_below="@+id/ingredientsTitle"
             android:layout_marginTop="2dp"
             android:padding="10dp"

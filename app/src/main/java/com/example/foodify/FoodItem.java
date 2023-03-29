@@ -1,6 +1,5 @@
 package com.example.foodify;
 
-import android.net.Uri;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
@@ -73,7 +72,7 @@ public class FoodItem {
     }
 
     public String toString(){
-        return title + " \ttotal: " + total;
+        return title + " " + total;
     }
     // [END post_to_map]
 }

@@ -3,11 +3,13 @@ package com.example.foodify;
 import java.net.URI;
 import java.util.List;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class JsonResponse {
     @Expose
     private Integer id;
     @Expose
+    @SerializedName("title")
     private String title;
     @Expose
     private Integer price;
@@ -33,6 +35,7 @@ public class JsonResponse {
     private Object ingredientCount;
     @Expose
     private List<URI> images = null;
+
 
     public Integer getId() {
         return id;
@@ -147,6 +150,6 @@ public class JsonResponse {
     }
 
     public String toString(){
-        return badges.toString();
+        return badges + " ";
     }
 }

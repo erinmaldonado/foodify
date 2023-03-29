@@ -53,13 +53,13 @@
             android:name=".Home"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".HomeFragment"
+            android:name=".fragments.HomeFragment"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".Scan"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".ListFragment"
+            android:name=".fragments.ListFragment"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".BarcodeScannerActivity"

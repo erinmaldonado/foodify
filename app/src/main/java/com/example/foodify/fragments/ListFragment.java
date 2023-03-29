@@ -1,4 +1,4 @@
-package com.example.foodify;
+package com.example.foodify.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.foodify.FoodItem;
+import com.example.foodify.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -60,14 +62,18 @@ public class ListFragment extends Fragment {
          arrayList = new ArrayList<>();
         arrayAdapter = new ArrayAdapter<FoodItem>(getActivity(), android.R.layout.simple_list_item_1, arrayList);
 
+        // Only works if scan is done first
+        //TODO
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds: snapshot.getChildren()){
-                    FoodItem foodItem= ds.getValue(FoodItem.class);
-                    arrayList.add(foodItem);
+                if(snapshot.exists()){
+                    for(DataSnapshot ds: snapshot.getChildren()){
+                        FoodItem foodItem= ds.getValue(FoodItem.class);
+                        arrayList.add(foodItem);
+                    }
+                    listView.setAdapter(arrayAdapter);
                 }
-                listView.setAdapter(arrayAdapter);
             }
 
             @Override

@@ -2,6 +2,7 @@ package com.example.foodify;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -36,9 +37,14 @@ import com.google.gson.GsonBuilder;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +64,9 @@ public class Scan extends Fragment {
     private Button addToInventory;
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private DatabaseReference root = db.getReference();
+    GsonBuilder gsonBuilder = new GsonBuilder();
+    Gson gson;
+    String myResponse;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Nullable
@@ -81,7 +90,6 @@ public class Scan extends Fragment {
             decreaseInteger();
         });
 
-        addToInventory = view.findViewById(R.id.add_to_inventory);
 
     }
 
@@ -156,7 +164,8 @@ public class Scan extends Fragment {
         TextView foodName = getView().findViewById(R.id.foodTitle);
         TextView foodUpc = getView().findViewById(R.id.foodUpc);
         TextView info = getView().findViewById(R.id.info);
-        ImageView imageView = getView().findViewById(R.id.imageView);
+        TextView htmlContent = getView().findViewById(R.id.htmlText);
+        final String[] uri = new String[1];
 
         String Key;
         Key = "55d01a0c91msh1a5d4e55f6cf63cp174b8bjsn419908648873"; // FIX
@@ -179,31 +188,88 @@ public class Scan extends Fragment {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(response.isSuccessful()){
-                    String myResponse = response.body().string();
+                if(response.isSuccessful()) {
+                    myResponse = response.body().string();
 
-                    GsonBuilder builder = new GsonBuilder();
-                    builder.serializeNulls();
-                    builder.setPrettyPrinting();
-                    Gson gson = builder.create();
+                    String jsonString = myResponse;
+                    JSONObject jsonResult = null;
+                    try {
+                        jsonResult = new JSONObject(jsonString);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    String title = null;
+                    JSONArray badgesArray = new JSONArray();
+                    JSONArray imagesArray = new JSONArray();
+                    JSONArray nutritionArray = new JSONArray();
+                    JSONObject nutrition = null;
 
-                    jsonResponse =gson.fromJson(myResponse, JsonResponse.class);
-                    if(!myResponse.contains("not find")){
-                        getActivity().runOnUiThread(() ->{
-                            foodName.setText(jsonResponse.getTitle() + " id: " + jsonResponse.getId());
-                            foodUpc.setText(upc);
-                            info.setText(jsonResponse.toString());
-                            String url = jsonResponse.getImages().get(2).toString();
-                            ImageView imageView = (ImageView) getView().findViewById(R.id.imageView);
-                            Glide.with(getActivity()).load(url).into(imageView);
-                        });
+                    try {
+                        nutrition = jsonResult.getJSONObject("nutrition");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
-                    addToInventory.setOnClickListener(view -> {
-                        saveUPCToDatabase(jsonResponse.getTitle(), upc, minteger, jsonResponse.toString(), url);
-                        Toast.makeText(getActivity(), "item added", Toast.LENGTH_SHORT).show();
-                    });
+                    String[] badges = new String[0];
+                    String[] images = new String[0];
+                    String[] nutrients = new String[0];
 
+                    try {
+                        title = (String) jsonResult.get("title");
+                        badgesArray = (JSONArray) jsonResult.get("badges");
+                        imagesArray = (JSONArray) jsonResult.get("images");
+                        nutritionArray = nutrition.getJSONArray("nutrients");
+
+                        List<String> badgesList = new ArrayList<String>();
+                        List<String> imagesList = new ArrayList<String>();
+                        List<String> nutritionList = new ArrayList<String>();
+
+                        for (int i = 0; i < badgesArray.length(); i++) {
+                            badgesList.add(badgesArray.getString(i));
+                        }
+                        for (int i = 0; i < imagesArray.length(); i++) {
+                            imagesList.add(imagesArray.getString(i));
+                        }
+                        for (int i = 0; i < nutritionArray.length(); i++) {
+                            nutritionList.add(nutritionArray.getString(i));
+                        }
+
+                        int badgeSize = badgesList.size();
+                        int imageSize = imagesList.size();
+                        int nutritionSize = nutritionList.size();
+
+                        badges = badgesList.toArray(new String[badgeSize]);
+                        images = imagesList.toArray(new String[imageSize]);
+                        nutrients = nutritionList.toArray(new String[nutritionSize]);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    if (getActivity() != null) {
+                        //call the ui thread
+                        String finalTitle = title;
+                        String[] finalBadges = badges;
+                        String[] finalImages = images;
+                        String[] finalNutrients = nutrients;
+
+                        ((Activity) requireContext()).runOnUiThread(() -> {
+                            htmlContent.setText(Arrays.toString(finalNutrients));
+                            foodName.setText(finalTitle);
+                            foodUpc.setText(upc);
+                            info.setText(Arrays.toString(finalBadges));
+                            uri[0] = finalImages[2];
+                            ImageView imageView1 = (ImageView) getView().findViewById(R.id.imageView);
+                            Glide.with(getActivity()).load(uri[0]).into(imageView1);
+                        });
+
+                        addToInventory = getView().findViewById(R.id.add_to_inventory);
+                        addToInventory.setOnClickListener(view -> {
+                            saveUPCToDatabase(finalTitle, upc, minteger, Arrays.toString(finalBadges), uri[0]);
+                            Toast.makeText(getActivity(), "item added", Toast.LENGTH_SHORT).show();
+                        });
+
+                    }
                 }
             }
 

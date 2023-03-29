@@ -1,5 +1,8 @@
-package com.example.foodify;
+package com.example.foodify.fragments;
 
+import static android.content.ContentValues.TAG;
+
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +19,10 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.foodify.FoodItem;
+import com.example.foodify.FoodItemAdapter;
+import com.example.foodify.R;
+import com.example.foodify.Scan;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,24 +32,26 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-    private RecyclerView recyclerview;
-
     private Button scanBtn;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     private FirebaseAuth auth;
     FirebaseUser user;
 
-    RecyclerView recyclerView;
     ArrayList<FoodItem> list;
-    //FoodItemAdapter myAdapter;
+    FoodItemAdapter myAdapter;
 
+    private RecyclerView recyclerView;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -81,10 +90,12 @@ public class HomeFragment extends Fragment {
         String userId = user.getUid();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        //recyclerView = getView().findViewById(R.id.inventoryRecView);
-        //databaseReference = firebaseDatabase.getReference(userId);
-        /*
+        databaseReference = firebaseDatabase.getReference(userId+"/foodList");
+
+        recyclerView = getView().findViewById(R.id.inventoryRecView);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL,false));
+
         list = new ArrayList<>();
         myAdapter = new FoodItemAdapter(getContext(), list);
         recyclerView.setAdapter(myAdapter);
@@ -92,11 +103,13 @@ public class HomeFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
-                    FoodItem foodItem = dataSnapshot.getValue(FoodItem.class);
-                    list.add(foodItem);
+                if(snapshot.exists()){
+                    for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                        FoodItem foodItem = dataSnapshot.getValue(FoodItem.class);
+                        list.add(foodItem);
+                    }
+                    myAdapter.notifyDataSetChanged();
                 }
-                myAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -104,7 +117,6 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
-         */
     }
+
 }
