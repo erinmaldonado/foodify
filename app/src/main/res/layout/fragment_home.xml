@@ -11,6 +11,19 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
+        <Button
+            android:id="@+id/receiptBtn"
+            android:layout_width="95dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/scanImg"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="41dp"
+            android:layout_marginEnd="15dp"
+            android:backgroundTint="#e6b400"
+            android:text="receipt"
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
+
         <TextView
             android:id="@+id/homeTitle"
             android:layout_width="wrap_content"
@@ -99,7 +112,7 @@
         <Button
             android:id="@+id/viewMoreBtn"
             android:layout_width="95dp"
-            android:layout_height="48dp"
+            android:layout_height="35dp"
             android:layout_below="@id/foodSearch"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="10dp"
@@ -110,13 +123,13 @@
             tools:ignore="SmallSp" />
 
         <ImageView
+            android:id="@+id/scanImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/scanDetails"
-            android:layout_marginTop="50dp"
-            android:src="@drawable/barcode_img"
             android:layout_centerHorizontal="true"
-            />
+            android:layout_marginTop="50dp"
+            android:src="@drawable/barcode_img" />
 
 
     </RelativeLayout>

@@ -7,7 +7,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import java.util.HashMap;
 import java.util.Map;
 
-// [START post_class]
+// [START fooditemClass]
 @IgnoreExtraProperties
 public class FoodItem {
 
@@ -17,7 +17,7 @@ public class FoodItem {
     public String uri;
 
     public FoodItem() {
-        // Default constructor required for calls to DataSnapshot.getValue(Post.class)
+        // Default constructor required for calls to DataSnapshot.getValue(FoodItem.class)
     }
 
     public FoodItem(String title, String response, int total, String uri) {
@@ -59,7 +59,7 @@ public class FoodItem {
         this.response = response;
     }
 
-    // [START post_to_map]
+    // [START foodItemToMap]
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -74,6 +74,6 @@ public class FoodItem {
     public String toString(){
         return title + " " + total;
     }
-    // [END post_to_map]
+    // [END foodItemToMap]
 }
-// [END post_class]
+// [END foodItem]
