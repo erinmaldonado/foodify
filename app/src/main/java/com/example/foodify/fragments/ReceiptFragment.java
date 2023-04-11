@@ -1,6 +1,7 @@
 package com.example.foodify.fragments;
 
 import android.content.res.AssetManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,19 @@ import okhttp3.Response;
 public class ReceiptFragment extends Fragment {
 
     private TextView extractedTV;
+
+    private static final String ARG_FILE_URI = "file_uri";
+
+    public ReceiptFragment() {
+    }
+
+    public static ReceiptFragment newInstance(Uri fileUri) {
+        ReceiptFragment fragment = new ReceiptFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_FILE_URI, fileUri);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

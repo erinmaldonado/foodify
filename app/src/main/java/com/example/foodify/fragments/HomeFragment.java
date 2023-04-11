@@ -1,10 +1,14 @@
 package com.example.foodify.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,6 +44,7 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ValueEventListener valueEventListener;
+    private static final int REQUEST_CODE_PICK_FILE = 1;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -67,15 +72,34 @@ public class HomeFragment extends Fragment {
         });
 
         receiptBtn.setOnClickListener(v -> {
-            ReceiptFragment read = new ReceiptFragment();
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame_layout, read);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+          openFilePicker();
         });
 
         return view;
     }
+
+    private void openFilePicker() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*"); // Set the type to accept any file
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_CODE_PICK_FILE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_PICK_FILE && resultCode == Activity.RESULT_OK && data != null) {
+            Uri selectedFileUri = data.getData();
+            // Open ReceiptFragment using the selected file
+            ReceiptFragment receiptFragment = ReceiptFragment.newInstance(selectedFileUri);
+            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.frame_layout, receiptFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
