@@ -1,5 +1,6 @@
 package com.example.foodify.fragments;
 
+import android.app.Activity;
 import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.example.foodify.R;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -28,15 +30,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class ReceiptFragment extends Fragment {
 
     private TextView extractedTV;
-
     private static final String ARG_FILE_URI = "file_uri";
-
-    public ReceiptFragment() {
-    }
+    private Uri fileUri;
 
     public static ReceiptFragment newInstance(Uri fileUri) {
         ReceiptFragment fragment = new ReceiptFragment();
@@ -47,6 +47,15 @@ public class ReceiptFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            fileUri = getArguments().getParcelable(ARG_FILE_URI);
+        }
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_receipt, container, false);
         return view;
@@ -54,36 +63,52 @@ public class ReceiptFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        // Initialize the extractedTV variable
-        extractedTV = view.findViewById(R.id.pdf_text_view);
-        try {
-            extractImage();
-        } catch (IOException e) {
-            e.printStackTrace();
+        super.onCreate(savedInstanceState);
+        extractedTV = view.findViewById(R.id.pdf_text_view); // Replace 'R.id.extracted_text_view' with the actual id of your TextView in the fragment_receipt_info.xml layout file.
+
+        if (getArguments() != null) {
+            fileUri = getArguments().getParcelable(ARG_FILE_URI);
         }
-        //extractPDF();
+        if (fileUri != null) {
+            try {
+                extractImage();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("File URI is null");
+        }
     }
 
     private void extractImage() throws IOException {
         String receiptOcrEndpoint = "https://ocr.asprise.com/api/v1/receipt"; // Receipt OCR API endpoint
-        AssetManager assetManager = getContext().getAssets();
-        InputStream imageStream = assetManager.open("Detailed-Grocery-Payment-Receipt-Samples.jpg");
-
         OkHttpClient client = new OkHttpClient();
-
+        InputStream imageStream = null;
+        byte[] imageBytes = null;
+        try {
+            imageStream = getContext().getContentResolver().openInputStream(fileUri);
+            if (imageStream != null) {
+                imageBytes = new byte[imageStream.available()];
+                imageStream.read(imageBytes);
+            }
+        } finally {
+            if (imageStream != null) {
+                imageStream.close();
+            }
+        }
         RequestBody requestBody = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU && imageBytes != null) {
             requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("api_key", "TEST")       // Use 'TEST' for testing purpose
                     .addFormDataPart("recognizer", "auto")       // can be 'US', 'CA', 'JP', 'SG' or 'auto'
                     .addFormDataPart("ref_no", "ocr_java_123") // optional caller provided ref code
-                    .addFormDataPart("file", "Detailed-Grocery-Payment-Receipt-Samples.jpg",
-                            RequestBody.create(imageStream.readAllBytes(), MediaType.parse("image/jpeg")))
+                    .addFormDataPart("file", String.valueOf(imageStream),
+                            RequestBody.create(imageBytes, MediaType.parse("image/jpeg")))
                     .build();
         }
-
 
         Request request = new Request.Builder()
                 .url(receiptOcrEndpoint)
@@ -98,9 +123,19 @@ public class ReceiptFragment extends Fragment {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(response.isSuccessful()) {
-                    final String responseBodyString = response.body().string();
-                    getActivity().runOnUiThread(() -> extractedTV.setText(responseBodyString));
+                try (ResponseBody responseBody = response.body()) {
+                    if (response.isSuccessful()) {
+                        if (responseBody != null) {
+                            final String responseBodyString = responseBody.string();
+                            Activity activity = getActivity();
+                            if (activity != null) {
+                                activity.runOnUiThread(() -> extractedTV.setText(responseBodyString));
+                            }
+                        }
+                    } else {
+                        System.out.println("Request failed with status code: " + response.code());
+                        System.out.println("Error message: " + response.message());
+                    }
                 }
             }
         });

@@ -45,6 +45,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private ValueEventListener valueEventListener;
     private static final int REQUEST_CODE_PICK_FILE = 1;
+    private Uri selectedFileUri;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -72,9 +73,8 @@ public class HomeFragment extends Fragment {
         });
 
         receiptBtn.setOnClickListener(v -> {
-          openFilePicker();
+            openFilePicker();
         });
-
         return view;
     }
 
@@ -88,15 +88,18 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_CODE_PICK_FILE && resultCode == Activity.RESULT_OK && data != null) {
-            Uri selectedFileUri = data.getData();
+            selectedFileUri = data.getData(); // Assign the value to the selectedFileUri variable
             // Open ReceiptFragment using the selected file
-            ReceiptFragment receiptFragment = ReceiptFragment.newInstance(selectedFileUri);
-            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame_layout, receiptFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            if (selectedFileUri != null) {
+                ReceiptFragment receiptFragment = ReceiptFragment.newInstance(selectedFileUri);
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, receiptFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            } else {
+                Toast.makeText(getContext(), "Please select a file first.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
